@@ -32,6 +32,7 @@ Vagrant.configure("2") do |config|
 
     n.vm.hostname = "dir.example.com"
     n.vm.network "private_network", ip: "192.168.70.10"
+    n.vm.network "private_network", ip: "0.0.0.0", auto_config: false
   end
 
   config.vm.define "ctl1" do |n|
