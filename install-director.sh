@@ -124,3 +124,23 @@ openstack baremetal node list
 openstack overcloud node introspect --all-manageable --provide
 
 # ---
+
+openstack baremetal node set --property capabilities='profile:control,boot_option:local' 3fa31610-d54c-4ef0-9853-5e05cff657c7
+openstack baremetal node set --property capabilities='profile:compute,boot_option:local' 04435321-9cbe-439b-ad59-b90cb38669b3
+
+openstack flavor delete compute
+openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 compute
+openstack flavor set --property "capabilities:boot_option"="local" --property "capabilities:profile"="compute" compute
+
+openstack flavor delete control
+openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 control
+openstack flavor set --property "capabilities:boot_option"="local" --property "capabilities:profile"="control" control
+
+openstack flavor delete baremetal
+openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 baremetal
+openstack flavor set --property "capabilities:boot_option"="local" baremetal
+
+touch /home/stack/deployment.yaml
+
+time openstack overcloud deploy --templates \
+  -e ~/deployment.yaml

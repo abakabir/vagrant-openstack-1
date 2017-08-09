@@ -1,0 +1,7 @@
+parameter_defaults:
+  OvercloudControlFlavor: control
+  OvercloudComputeFlavor: compute
+  ControllerCount: 1
+  ComputeCount: 1
+  NeutronTunnelTypes: vxlan
+  NeutronNetworkType: vxlan
