@@ -31,8 +31,11 @@ Vagrant.configure("2") do |config|
     end
 
     n.vm.hostname = "dir.example.com"
-    n.vm.network "private_network", ip: "192.168.70.10"
-    n.vm.network "private_network", ip: "0.0.0.0", auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      ip: "192.168.26.254",
+      libvirt__forward_mode: "none"
   end
 
   config.vm.define "ctl1" do |n|
@@ -42,7 +45,14 @@ Vagrant.configure("2") do |config|
     end
 
     n.vm.hostname = "ctl1.example.com"
-    n.vm.network "private_network", ip: "192.168.80.10"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      ip: "192.168.125.10"
   end
 
   config.vm.define "ctl2" do |n|
@@ -52,7 +62,14 @@ Vagrant.configure("2") do |config|
     end
 
     n.vm.hostname = "ctl2.example.com"
-    n.vm.network "private_network", ip: "192.168.80.11"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      ip: "192.168.125.11"
   end
 
   config.vm.define "ctl3" do |n|
@@ -62,7 +79,14 @@ Vagrant.configure("2") do |config|
     end
 
     n.vm.hostname = "ctl3.example.com"
-    n.vm.network "private_network", ip: "192.168.80.12"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      ip: "192.168.125.12"
   end
 
   config.vm.define "cpt1" do |n|
@@ -73,7 +97,14 @@ Vagrant.configure("2") do |config|
     end
 
     n.vm.hostname = "cpt1.example.com"
-    n.vm.network "private_network", ip: "192.168.90.10"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      ip: "192.168.125.13"
   end
 
   config.vm.define "cpt2" do |n|
@@ -87,6 +118,13 @@ Vagrant.configure("2") do |config|
     end
 
     n.vm.hostname = "cpt2.example.com"
-    n.vm.network "private_network", ip: "192.168.90.11"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      ip: "192.168.125.14"
   end
 end
