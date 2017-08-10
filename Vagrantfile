@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "ctl1" do |n|
     n.vm.provider provider do |v|
-      v.memory = 6144
+      v.memory = 8912
       v.cpus = 4
     end
 
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "ctl2" do |n|
     n.vm.provider provider do |v|
-      v.memory = 6144
+      v.memory = 8912
       v.cpus = 4
     end
 
@@ -74,7 +74,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "ctl3" do |n|
     n.vm.provider provider do |v|
-      v.memory = 6144
+      v.memory = 8912
       v.cpus = 4
     end
 
@@ -91,7 +91,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "cpt1" do |n|
     n.vm.provider provider do |v|
-      v.memory = 4096
+      v.memory = 8192
       v.cpus = 4
       v.cpu_mode = "host-passthrough"
     end
@@ -109,7 +109,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "cpt2" do |n|
     n.vm.provider provider do |v|
-      v.cpus = 4
+      v.cpus = 8192
       v.cpu_mode = "host-passthrough"
       v.numa_nodes = [
         {:id => 0, :cpus => "0-1", :memory => "2048"},

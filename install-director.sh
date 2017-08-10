@@ -140,7 +140,4 @@ openstack flavor delete baremetal
 openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 baremetal
 openstack flavor set --property "capabilities:boot_option"="local" baremetal
 
-touch /home/stack/deployment.yaml
-
-time openstack overcloud deploy --templates \
-  -e ~/deployment.yaml
+./templates/deploy-overcloud.sh
