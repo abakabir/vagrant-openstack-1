@@ -49,7 +49,8 @@ Vagrant.configure("2") do |config|
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
-      auto_config: false
+      auto_config: false,
+      ip: "192.168.26.10"
     n.vm.network "private_network",
       libvirt__network_name: "external",
       ip: "192.168.125.10"
@@ -66,7 +67,8 @@ Vagrant.configure("2") do |config|
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
-      auto_config: false
+      auto_config: false,
+      ip: "192.168.26.11"
     n.vm.network "private_network",
       libvirt__network_name: "external",
       ip: "192.168.125.11"
@@ -83,7 +85,8 @@ Vagrant.configure("2") do |config|
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
-      auto_config: false
+      auto_config: false,
+      ip: "192.168.26.12"
     n.vm.network "private_network",
       libvirt__network_name: "external",
       ip: "192.168.125.12"
@@ -101,7 +104,8 @@ Vagrant.configure("2") do |config|
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
-      auto_config: false
+      auto_config: false,
+      ip: "192.168.26.13"
     n.vm.network "private_network",
       libvirt__network_name: "external",
       ip: "192.168.125.13"
@@ -122,7 +126,8 @@ Vagrant.configure("2") do |config|
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
-      auto_config: false
+      auto_config: false,
+      ip: "192.168.26.14"
     n.vm.network "private_network",
       libvirt__network_name: "external",
       ip: "192.168.125.14"
