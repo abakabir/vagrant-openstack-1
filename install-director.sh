@@ -147,7 +147,8 @@ openstack flavor set --property "capabilities:boot_option"="local" baremetal
 
 # --- Deploy Overcloud
 
-. /home/stack/stackrc
+cd /home/stack
+source stackrc
 
 ./templates/deploy-overcloud.sh
 
