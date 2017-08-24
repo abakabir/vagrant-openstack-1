@@ -5,9 +5,9 @@ resource_registry:
 #  OS::TripleO::BlockStorage::Net::SoftwareConfig:
 #    ../network/config/single-nic-vlans/cinder-storage.yaml
   OS::TripleO::Compute::Net::SoftwareConfig:
-    /home/stack/vagrant-openstack/templates/compute.yaml
+    /home/stack/templates/compute.yaml
   OS::TripleO::Controller::Net::SoftwareConfig:
-    /home/stack/vagrant-openstack/templates/controller.yaml
+    /home/stack/templates/controller.yaml
 #  OS::TripleO::ObjectStorage::Net::SoftwareConfig:
 #    ../network/config/single-nic-vlans/swift-storage.yaml
 #  OS::TripleO::CephStorage::Net::SoftwareConfig:
