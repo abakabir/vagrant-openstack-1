@@ -30,6 +30,8 @@ Vagrant.configure("2") do |config|
       v.cpus = 4
     end
 
+    n.vm.synced_folder "templates/", "/templates"
+
     n.vm.hostname = "dir.example.com"
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
