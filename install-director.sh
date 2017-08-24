@@ -58,7 +58,7 @@ sudo reboot now
 
 # Install Director packages
 
-su - stack
+sudo su - stack
 
 sudo yum install python-tripleoclient -y
 
@@ -66,9 +66,7 @@ touch /home/stack/undercloud.conf
 
 #  Deploy Undercloud
 
-openstack undercloud install
-
-su - stack
+time openstack undercloud install
 
 sudo systemctl list-units openstack-*
 
@@ -144,7 +142,7 @@ jq . << EOF > ~/instackenv.json
       "arch": "x86_64",
       "pm_user": "homeski",
       "name": "cpt1",
-      "capabilities": "profile:control,boot_option:local"
+      "capabilities": "profile:compute,boot_option:local"
     }
   ]
 }
@@ -158,18 +156,6 @@ openstack baremetal node list
 # Comment out eth0 on KVM domain on host
 
 openstack overcloud node introspect --all-manageable --provide
-
-openstack flavor delete compute
-openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 compute
-openstack flavor set --property "capabilities:boot_option"="local" --property "capabilities:profile"="compute" compute
-
-openstack flavor delete control
-openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 control
-openstack flavor set --property "capabilities:boot_option"="local" --property "capabilities:profile"="control" control
-
-openstack flavor delete baremetal
-openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 baremetal
-openstack flavor set --property "capabilities:boot_option"="local" baremetal
 
 # --- Deploy Overcloud
 
