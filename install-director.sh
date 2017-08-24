@@ -99,7 +99,9 @@ jq . << EOF > ~/instackenv.json
       "memory": "4096",
       "disk": "60",
       "arch": "x86_64",
-      "pm_user": "homeski"
+      "pm_user": "homeski",
+      "name": "ctl1",
+      "capabilities": "profile:control,boot_option:local"
     },
     {
       "pm_addr": "192.168.122.1",
@@ -112,7 +114,9 @@ jq . << EOF > ~/instackenv.json
       "memory": "4096",
       "disk": "60",
       "arch": "x86_64",
-      "pm_user": "homeski"
+      "pm_user": "homeski",
+      "name": "cpt1",
+      "capabilities": "profile:control,boot_option:local"
     }
   ]
 }
@@ -125,9 +129,6 @@ openstack baremetal node list
 # comment out eth0 on KVM domain on host
 
 openstack overcloud node introspect --all-manageable --provide
-
-openstack baremetal node set --property capabilities='profile:control,boot_option:local' 3fa31610-d54c-4ef0-9853-5e05cff657c7
-openstack baremetal node set --property capabilities='profile:compute,boot_option:local' 04435321-9cbe-439b-ad59-b90cb38669b3
 
 openstack flavor delete compute
 openstack flavor create --id auto --ram 1024 --disk 40 --vcpus 1 compute
