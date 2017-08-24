@@ -1,5 +1,31 @@
 #!/bin/bash
 
+# --- QEMU FS modifications
+
+qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
+qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
+
+# Increase XFS on dir to 50GB
+
+vagrant ssh dir
+shutdown now
+
+qemu-img resize /var/lib/libvirt/images/vagrant-openstack_dir.img +50G
+
+fdisk -l /dev/vda
+(
+echo d # Delete primary partition
+echo n # Add a new partition
+echo p # Primary partition
+echo 1 # Partition number
+echo   # First sector
+echo   # Last sector
+echo w # Write changes
+) | sudo fdisk
+partprobe
+reboot now
+xfs_growfs /dev/vda1 -d
+
 # --- Install Undercloud
 
 # Following documentation at:
