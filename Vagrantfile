@@ -38,6 +38,11 @@ Vagrant.configure("2") do |config|
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       ip: "192.168.24.2"
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "nat",
+      ip: "10.0.0.8"
   end
 
   config.vm.define "ctl1" do |n|
