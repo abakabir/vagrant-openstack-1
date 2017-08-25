@@ -2,28 +2,43 @@
 
 # --- QEMU FS modifications
 
-qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
-qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
+virsh destroy vagrant-openstack_dir
+virsh destroy vagrant-openstack_ctl1
+virsh destroy vagrant-openstack_cpt1
+
+sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_dir.img +50G
+sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl1.img +50G
+sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
+
+virsh start vagrant-openstack_dir
 
 # Increase XFS on dir to 50GB
 
 vagrant ssh dir
-shutdown now
 
-qemu-img resize /var/lib/libvirt/images/vagrant-openstack_dir.img +50G
+sudo su -
 
 fdisk -l /dev/vda
+
 (
-echo d # Delete primary partition
-echo n # Add a new partition
-echo p # Primary partition
-echo 1 # Partition number
-echo   # First sector
-echo   # Last sector
-echo w # Write changes
-) | sudo fdisk
+echo d
+echo n
+echo p
+echo 1
+echo
+echo
+echo w
+) | sudo fdisk /dev/vda
+
+fdisk -l /dev/vda
+
 partprobe
 reboot now
+
+vagrant ssh dir
+
+sudo su -
+
 xfs_growfs /dev/vda1 -d
 
 # --- Install Undercloud
@@ -58,11 +73,13 @@ sudo reboot now
 
 # Install Director packages
 
+vagrant ssh dir
+
 sudo su - stack
 
 sudo yum install python-tripleoclient -y
 
-touch /home/stack/undercloud.conf
+cp /templates/undercloud/undercloud.conf /home/stack/
 
 #  Deploy Undercloud
 
@@ -84,7 +101,7 @@ openstack overcloud image upload --image-path /home/stack/images/
 openstack image list
 ls -l /httpboot
 
-openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `openstack subnet list | grep 192.168.26 | awk '{print $2}'`
+openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `openstack subnet list | grep ctlplane | awk '{print $2}'`
 
 # --- Setup libvirt power manager
 
@@ -160,9 +177,8 @@ openstack overcloud node introspect --all-manageable --provide
 # --- Deploy Overcloud
 
 cd /home/stack
-source stackrc
 
-./templates/deploy-overcloud.sh
+./templates/scripts/deploy-overcloud-multiple-nics.sh
 
 # --- Boot first instance
 
