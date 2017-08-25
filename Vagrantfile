@@ -36,8 +36,8 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      ip: "192.168.26.254",
-      libvirt__forward_mode: "none"
+      libvirt__forward_mode: "none",
+      ip: "192.168.24.2"
   end
 
   config.vm.define "ctl1" do |n|
@@ -52,46 +52,37 @@ Vagrant.configure("2") do |config|
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       auto_config: false,
-      ip: "192.168.26.10"
+      ip: "192.168.24.10"
     n.vm.network "private_network",
-      libvirt__network_name: "external",
-      ip: "192.168.125.10"
-  end
-
-  config.vm.define "ctl2" do |n|
-    n.vm.provider provider do |v|
-      v.memory = 8912
-      v.cpus = 4
-    end
-
-    n.vm.hostname = "ctl2.example.com"
-    n.vm.network "private_network",
-      libvirt__network_name: "provisioning",
+      libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       auto_config: false,
-      ip: "192.168.26.11"
+      ip: "192.168.34.10"
     n.vm.network "private_network",
-      libvirt__network_name: "external",
-      ip: "192.168.125.11"
-  end
-
-  config.vm.define "ctl3" do |n|
-    n.vm.provider provider do |v|
-      v.memory = 8912
-      v.cpus = 4
-    end
-
-    n.vm.hostname = "ctl3.example.com"
-    n.vm.network "private_network",
-      libvirt__network_name: "provisioning",
+      libvirt__network_name: "storage-mgmt",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       auto_config: false,
-      ip: "192.168.26.12"
+      ip: "192.168.44.10"
+    n.vm.network "private_network",
+      libvirt__network_name: "internal-api",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "192.168.54.10"
+    n.vm.network "private_network",
+      libvirt__network_name: "tenant",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "172.16.0.10"
     n.vm.network "private_network",
       libvirt__network_name: "external",
-      ip: "192.168.125.12"
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "nat",
+      auto_config: false,
+      ip: "10.0.0.10"
   end
 
   config.vm.define "cpt1" do |n|
@@ -107,31 +98,24 @@ Vagrant.configure("2") do |config|
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       auto_config: false,
-      ip: "192.168.26.13"
+      ip: "192.168.24.20"
     n.vm.network "private_network",
-      libvirt__network_name: "external",
-      ip: "192.168.125.13"
-  end
-
-  config.vm.define "cpt2" do |n|
-    n.vm.provider provider do |v|
-      v.cpus = 4
-      v.cpu_mode = "host-passthrough"
-      v.numa_nodes = [
-        {:id => 0, :cpus => "0-1", :memory => "2048"},
-        {:id => 1, :cpus => "2-3", :memory => "2048"},
-      ]
-    end
-
-    n.vm.hostname = "cpt2.example.com"
-    n.vm.network "private_network",
-      libvirt__network_name: "provisioning",
+      libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       auto_config: false,
-      ip: "192.168.26.14"
+      ip: "192.168.34.20"
     n.vm.network "private_network",
-      libvirt__network_name: "external",
-      ip: "192.168.125.14"
+      libvirt__network_name: "internal-api",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "192.168.54.20"
+    n.vm.network "private_network",
+      libvirt__network_name: "tenant",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "172.16.0.10"
   end
 end

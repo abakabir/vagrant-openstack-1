@@ -2,4 +2,4 @@
 
 time openstack overcloud deploy --templates \
   -e /home/stack/templates/deployment.yaml \
-  -e /home/stack/templates/network-environment.yaml 
+  -e /home/stack/templates/environment/network-environment-multiple-nics.yaml 
