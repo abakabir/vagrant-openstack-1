@@ -4,10 +4,14 @@
 
 virsh destroy vagrant-openstack_dir
 virsh destroy vagrant-openstack_ctl1
+virsh destroy vagrant-openstack_ctl2
+virsh destroy vagrant-openstack_ctl3
 virsh destroy vagrant-openstack_cpt1
 
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_dir.img +50G
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl1.img +50G
+sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl2.img +50G
+sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl3.img +50G
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
 
 virsh start vagrant-openstack_dir
