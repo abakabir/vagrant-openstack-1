@@ -136,7 +136,7 @@ jq . << EOF > ~/instackenv.json
       "pm_password": "$(cat ~/.ssh/id_rsa)",
       "pm_type": "pxe_ssh",
       "mac": [
-        "52:54:00:2a:9d:df"
+        ""
       ],
       "cpu": "4",
       "memory": "4096",
@@ -151,7 +151,37 @@ jq . << EOF > ~/instackenv.json
       "pm_password": "$(cat ~/.ssh/id_rsa)",
       "pm_type": "pxe_ssh",
       "mac": [
-        "52:54:00:81:d8:1d"
+        ""
+      ],
+      "cpu": "4",
+      "memory": "4096",
+      "disk": "60",
+      "arch": "x86_64",
+      "pm_user": "homeski",
+      "name": "ctl2",
+      "capabilities": "profile:control,boot_option:local"
+    },
+    {
+      "pm_addr": "192.168.122.1",
+      "pm_password": "$(cat ~/.ssh/id_rsa)",
+      "pm_type": "pxe_ssh",
+      "mac": [
+        ""
+      ],
+      "cpu": "4",
+      "memory": "4096",
+      "disk": "60",
+      "arch": "x86_64",
+      "pm_user": "homeski",
+      "name": "ctl3",
+      "capabilities": "profile:control,boot_option:local"
+    },
+    {
+      "pm_addr": "192.168.122.1",
+      "pm_password": "$(cat ~/.ssh/id_rsa)",
+      "pm_type": "pxe_ssh",
+      "mac": [
+        ""
       ],
       "cpu": "4",
       "memory": "4096",
@@ -173,6 +203,8 @@ openstack baremetal node list
 # Comment out eth0 on KVM domain on host
 
 openstack overcloud node introspect --all-manageable --provide
+
+openstack overcloud profiles list
 
 # --- Deploy Overcloud
 
