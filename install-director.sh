@@ -239,8 +239,18 @@ openstack server create --flavor m1.nano --nic net-id=efb64350-550e-42cb-970f-be
 # Monitor hypervisor info
 watch 'free -h; echo ""; df -h; echo ""; virsh list; echo ""; ps aux  | awk '\''{print $6/1024 " MB\t\t" $11}'\''  | sort -n | tail'
 
+# Show process MB usage
+ps aux  | awk '{print $6/1024 " MB\t\t" $11}'  | sort -n
+
 # Delete all baremetal servers
 for i in `os baremetal node list | grep available | awk '{print $2}'`; do os baremetal node delete $i; done
 
 # Show default services
 cat /usr/share/openstack-tripleo-heat-templates/overcloud-resource-registry-puppet.j2.yaml | grep "OS::TripleO::Services::" | grep -v "OS::Heat::None"
+
+# Remove ironic nodes manually and re-import
+for i in `os baremetal node list | grep available | awk '{print $2}'`; do ironic node-set-provision-state $i deleted; done
+for i in `os baremetal node list | grep available | awk '{print $2}'`; do ironic node-update $i remove instance_uuid; done
+for i in `os baremetal node list | grep available | awk '{print $2}'`; do openstack baremetal node delete $i; done
+openstack overcloud node import ~/instackenv.json
+openstack overcloud node introspect --all-manageable --provide

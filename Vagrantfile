@@ -182,7 +182,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "cpt1" do |n|
     n.vm.provider provider do |v|
-      v.memory = 8192
+      v.memory = 4096
       v.cpus = 4
       v.cpu_mode = "host-passthrough"
     end
