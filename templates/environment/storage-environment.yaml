@@ -1,10 +1,10 @@
 ## A Heat environment file which can be used to set up storage
 ## backends. Defaults to Ceph used as a backend for Cinder, Glance and
 ## Nova ephemeral storage.
-resource_registry:
-  OS::TripleO::Services::CephMon: ../puppet/services/ceph-mon.yaml
-  OS::TripleO::Services::CephOSD: ../puppet/services/ceph-osd.yaml
-  OS::TripleO::Services::CephClient: ../puppet/services/ceph-client.yaml
+# resource_registry:
+#   OS::TripleO::Services::CephMon: ../puppet/services/ceph-mon.yaml
+#   OS::TripleO::Services::CephOSD: ../puppet/services/ceph-osd.yaml
+#   OS::TripleO::Services::CephClient: ../puppet/services/ceph-client.yaml
 
 parameter_defaults:
 

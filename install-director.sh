@@ -218,11 +218,10 @@ cd /home/stack
 
 # --- Boot first instance
 
-openstack flavor create --id 0 --vcpus 1 --ram 64 --disk 1 m1.nano
+openstack flavor create --id 0 --vcpus 1 --ram 512 --disk 1 m1.nano
 
-openstack network create
-
-openstack subnet create --network efb64350-550e-42cb-970f-be7ddaeaf497 --subnet-range 192.168.55.0/24 test-subnet
+openstack network create fip-tenant --provider-network-type vlan --provider-physical-network datacentre --share
+openstack subnet create fip-tenant-subnet --no-dhcp --allocation-pool start=10.0.0.20,end=10.0.0.50 --gateway=10.0.0.1 --network fip-tenant --subnet-range 10.0.0.0/24
 
 cd /home/stack/images
 wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
@@ -232,7 +231,7 @@ openstack image create "cirros" \
   --disk-format qcow2 --container-format bare \
   --public
 
-openstack server create --flavor m1.nano --nic net-id=efb64350-550e-42cb-970f-be7ddaeaf497 --image cirros test1
+openstack server create --flavor m1.nano --nic net-id=`openstack network list | grep fip-tenant | awk '{print $2}'` --image cirros test1
 
 # --- Useful commands
 

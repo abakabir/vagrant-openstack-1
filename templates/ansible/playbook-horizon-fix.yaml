@@ -1,0 +1,14 @@
+- hosts: controllers
+  user: heat-admin
+  become: yes
+  tasks:
+    - name: add the missing line to horizon
+      lineinfile:
+        path: /etc/httpd/conf.d/10-horizon_vhost.conf
+        line: "  WSGIApplicationGroup %{GLOBAL}"
+        insertbefore: "^</VirtualHost>"
+        state: present
+      notify: restart httpd
+  handlers:
+    - name: restart httpd
+      service: name=httpd state=restarted
