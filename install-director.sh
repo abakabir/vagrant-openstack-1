@@ -233,3 +233,14 @@ openstack image create "cirros" \
   --public
 
 openstack server create --flavor m1.nano --nic net-id=efb64350-550e-42cb-970f-be7ddaeaf497 --image cirros test1
+
+# --- Useful commands
+
+# Monitor hypervisor info
+watch 'free -h; echo ""; df -h; echo ""; virsh list; echo ""; ps aux  | awk '\''{print $6/1024 " MB\t\t" $11}'\''  | sort -n | tail'
+
+# Delete all baremetal servers
+for i in `os baremetal node list | grep available | awk '{print $2}'`; do os baremetal node delete $i; done
+
+# Show default services
+cat /usr/share/openstack-tripleo-heat-templates/overcloud-resource-registry-puppet.j2.yaml | grep "OS::TripleO::Services::" | grep -v "OS::Heat::None"
