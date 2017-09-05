@@ -2,7 +2,14 @@
 
 ## What
 
-Virtualized Openstack 11 deployment using Vagrant and libvirt.
+Virtualized OSP 11 deployment using Vagrant and libvirt.
+
+## Bare metal used
+
+- ATX Desktop tower
+- i7-4790K
+- 32GB DDR3
+- Linux Mint 18.
 
 ## Tools
 
