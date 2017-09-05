@@ -23,13 +23,13 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 ### Controller
 
 ```
-| 1. Provisioning / Control Plane
-| | 2. Storage
-| | | 3. Storage Management
-| | | | 4. Internal API
-| | | | | 5. Tenant
-| | | | | | 6. External  
-
+1. Provisioning / Control Plane
+| 2. Storage
+| | 3. Storage Management
+| | |g 4. Internal API
+| | | | 5. Tenant
+| | | | | 6. External
+| | | | | |  
 | | | | | | 1. 192.168.24.0/24
   | | | | | 2. 192.168.34.0/24
     | | | | 3. 192.168.44.0/24
@@ -41,10 +41,10 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 ### Compute
 
 ```
-| 1. Provisioning / Control Plane
-| | 2. Storage
-| | | 3. Internal API
-| | | | 4. Tenant  
+1. Provisioning / Control Plane
+| 2. Storage
+| | 3. Internal API
+| | | 4. Tenant  
 | | | |
 | | | | 1. 192.168.24.0/24
   | | | 2. 192.168.34.0/24
