@@ -7,7 +7,6 @@ Vagrant.configure("2") do |config|
   # https://github.com/vagrant-libvirt/vagrant-libvirt
   provider = "libvirt"
 
-  config.ssh.private_key_path = "keys/vagrant_private_key"
   config.ssh.insert_key = false
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
