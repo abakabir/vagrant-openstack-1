@@ -26,7 +26,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 1. Provisioning / Control Plane
 | 2. Storage
 | | 3. Storage Management
-| | |g 4. Internal API
+| | | 4. Internal API
 | | | | 5. Tenant
 | | | | | 6. External
 | | | | | |  
