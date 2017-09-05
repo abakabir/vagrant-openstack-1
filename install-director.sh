@@ -130,84 +130,27 @@ ResultInactive=yes
 ResultActive=yes
 EOF
 
-# --- Setup Overcloud
+# Bring up overcloud nodes
+./vagrant-up.sh
 
-jq . << EOF > ~/instackenv.json
-{
-  "ssh-user": "homeski",
-  "ssh-key": "$(cat ~/.ssh/id_rsa)",
-  "ssh-port": "23",
-  "power_manager": "nova.virt.baremetal.virtual_power_driver.VirtualPowerManager",
-  "host-ip": "192.168.122.1",
-  "arch": "x86_64",
-  "nodes": [
-    {
-      "pm_addr": "192.168.122.1",
-      "pm_password": "$(cat ~/.ssh/id_rsa)",
-      "pm_type": "pxe_ssh",
-      "mac": [
-        ""
-      ],
-      "cpu": "4",
-      "memory": "4096",
-      "disk": "60",
-      "arch": "x86_64",
-      "pm_user": "homeski",
-      "name": "ctl1",
-      "capabilities": "profile:control,boot_option:local"
-    },
-    {
-      "pm_addr": "192.168.122.1",
-      "pm_password": "$(cat ~/.ssh/id_rsa)",
-      "pm_type": "pxe_ssh",
-      "mac": [
-        ""
-      ],
-      "cpu": "4",
-      "memory": "4096",
-      "disk": "60",
-      "arch": "x86_64",
-      "pm_user": "homeski",
-      "name": "ctl2",
-      "capabilities": "profile:control,boot_option:local"
-    },
-    {
-      "pm_addr": "192.168.122.1",
-      "pm_password": "$(cat ~/.ssh/id_rsa)",
-      "pm_type": "pxe_ssh",
-      "mac": [
-        ""
-      ],
-      "cpu": "4",
-      "memory": "4096",
-      "disk": "60",
-      "arch": "x86_64",
-      "pm_user": "homeski",
-      "name": "ctl3",
-      "capabilities": "profile:control,boot_option:local"
-    },
-    {
-      "pm_addr": "192.168.122.1",
-      "pm_password": "$(cat ~/.ssh/id_rsa)",
-      "pm_type": "pxe_ssh",
-      "mac": [
-        ""
-      ],
-      "cpu": "4",
-      "memory": "4096",
-      "disk": "60",
-      "arch": "x86_64",
-      "pm_user": "homeski",
-      "name": "cpt1",
-      "capabilities": "profile:compute,boot_option:local"
-    }
-  ]
-}
-EOF
+# Detach vagrant-libvirt NIC on all nodes
+for node in ctl1 ctl2 ctl3 cpt1; do
+virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
+done
 
 # ------------------------ #
 # --- Deploy Overcloud --- #
 # ------------------------ #
+
+# Grab provisioning NIC MAC address for all nodes
+for node in ctl1 ctl2 ctl3 cpt1; do
+  MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
+  echo vagrant-openstack_${node}=${MAC}
+done
+
+
+# Add MAC addresses to instackenv
+vi /home/stack/instackenv.json
 
 # Import "baremetal"
 
