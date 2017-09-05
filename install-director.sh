@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# --- QEMU FS modifications
+# ----------------------------- #
+# ----------------------------- #
+# --- QEMU FS modifications --- #
+# ----------------------------- #
 
 virsh destroy vagrant-openstack_dir
 virsh destroy vagrant-openstack_ctl1
@@ -45,7 +48,9 @@ sudo su -
 
 xfs_growfs /dev/vda1 -d
 
-# --- Install Undercloud
+# -------------------------- #
+# --- Install Undercloud --- #
+# -------------------------- #
 
 # Following documentation at:
 # https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/11/html-single/director_installation_and_usage/
@@ -59,9 +64,6 @@ echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
 chmod 0440 /etc/sudoers.d/stack
 
 su - stack
-
-mkdir ~/images
-cp -r /templates /home/stack/templates
 
 # Register system
 
@@ -83,6 +85,8 @@ sudo su - stack
 
 sudo yum install python-tripleoclient -y
 
+mkdir ~/images
+cp -r /templates /home/stack/templates
 cp /templates/undercloud/undercloud.conf /home/stack/
 
 #  Deploy Undercloud
@@ -107,7 +111,9 @@ ls -l /httpboot
 
 openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `openstack subnet list | grep ctlplane | awk '{print $2}'`
 
-# --- Setup libvirt power manager
+# ----------------------------------- #
+# --- Setup libvirt power manager --- #
+# ----------------------------------- #
 
 # On director
 
@@ -199,6 +205,10 @@ jq . << EOF > ~/instackenv.json
 }
 EOF
 
+# ------------------------ #
+# --- Deploy Overcloud --- #
+# ------------------------ #
+
 # Import "baremetal"
 
 openstack overcloud node import ~/instackenv.json
@@ -210,30 +220,52 @@ openstack overcloud node introspect --all-manageable --provide
 
 openstack overcloud profiles list
 
-# --- Deploy Overcloud
-
 cd /home/stack
 
 ./templates/scripts/deploy-overcloud-multiple-nics.sh
 
-# --- Boot first instance
+# --------------------------- #
+# --- Boot first instance --- #
+# --------------------------- #
 
-openstack flavor create --id 0 --vcpus 1 --ram 512 --disk 1 m1.nano
-
-openstack network create fip-tenant --provider-network-type vlan --provider-physical-network datacentre --share
-openstack subnet create fip-tenant-subnet --no-dhcp --allocation-pool start=10.0.0.20,end=10.0.0.50 --gateway=10.0.0.1 --network fip-tenant --subnet-range 10.0.0.0/24
+openstack flavor create --vcpus 1 --ram 512 --disk 1 m1.nano
+openstack flavor create --vcpus 1 --ram 512 --disk 10 m1.micro
 
 cd /home/stack/images
 wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
+wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
 
 openstack image create "cirros" \
   --file cirros-0.3.5-x86_64-disk.img \
   --disk-format qcow2 --container-format bare \
   --public
 
-openstack server create --flavor m1.nano --nic net-id=`openstack network list | grep fip-tenant | awk '{print $2}'` --image cirros test1
+openstack image create "centos7" \
+  --file CentOS-7-x86_64-GenericCloud.qcow2 \
+  --disk-format qcow2 --container-format bare \
+  --public
 
-# --- Useful commands
+# Test tenant networking
+openstack network create tenant
+openstack subnet create tenant --network tenant --dhcp --allocation-pool start=172.16.0.20,end=172.16.0.50 --gateway 172.16.0.1 --subnet-range 172.16.0.0/24 --dns-nameserver 8.8.8.8
+openstack server create --flavor m1.nano --nic net-id=`openstack network list | grep tenant | awk '{print $2}'` --image cirros test1
+openstack server create --flavor m1.nano --nic net-id=`openstack network list | grep tenant | awk '{print $2}'` --image cirros test2
+
+# Test external networking using floating IPs
+openstack network create public --share --external --provider-network-type flat --provider-physical-network datacentre
+openstack subnet create public --network public --dhcp --allocation-pool start=10.0.0.20,end=10.0.0.50 --gateway 10.0.0.1 --subnet-range 10.0.0.0/24 --dns-nameserver 8.8.8.8
+openstack port create --network public --host `openstack server list | grep test1 | awk '{print $2}'` public
+
+openstack router create public
+openstack router set public --external-gateway public
+openstack router add subnet public
+os floating ip create --port `os port list --server test1 -f value -c ID` public
+
+# Cleanup of external networking
+
+# ----------------------- #
+# --- Useful commands --- #
+# ----------------------- #
 
 # Monitor hypervisor info
 watch 'free -h; echo ""; df -h; echo ""; virsh list; echo ""; ps aux  | awk '\''{print $6/1024 " MB\t\t" $11}'\''  | sort -n | tail'
