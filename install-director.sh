@@ -201,8 +201,8 @@ openstack port create --network public --host `openstack server list | grep test
 
 openstack router create public
 openstack router set public --external-gateway public
-openstack router add subnet public
-os floating ip create --port `os port list --server test1 -f value -c ID` public
+openstack router add subnet public tenant
+openstack floating ip create --port `os port list --server test1 -f value -c ID` public
 
 # Cleanup of external networking
 
