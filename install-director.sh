@@ -10,12 +10,14 @@ virsh destroy vagrant-openstack_ctl1
 virsh destroy vagrant-openstack_ctl2
 virsh destroy vagrant-openstack_ctl3
 virsh destroy vagrant-openstack_cpt1
+virsh destroy vagrant-openstack_cpt2
 
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_dir.img +50G
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl1.img +50G
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl2.img +50G
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_ctl3.img +50G
 sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt1.img +50G
+sudo qemu-img resize /var/lib/libvirt/images/vagrant-openstack_cpt2.img +50G
 
 virsh start vagrant-openstack_dir
 
@@ -134,7 +136,7 @@ EOF
 ./vagrant-up.sh
 
 # Detach vagrant-libvirt NIC on all nodes
-for node in ctl1 ctl2 ctl3 cpt1; do
+for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
 virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
 done
 
@@ -143,7 +145,7 @@ done
 # ------------------------ #
 
 # Grab provisioning NIC MAC address for all nodes
-for node in ctl1 ctl2 ctl3 cpt1; do
+for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
   MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
   echo vagrant-openstack_${node}=${MAC}
 done

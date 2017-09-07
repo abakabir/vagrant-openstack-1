@@ -210,6 +210,44 @@ Vagrant.configure("2") do |config|
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "none",
       auto_config: false,
-      ip: "172.16.0.10"
+      ip: "172.16.0.20"
+  end
+
+  config.vm.define "cpt2" do |n|
+    n.vm.provider provider do |v|
+      v.memory = 4096
+      v.cpus = 4
+      v.cpu_mode = "host-passthrough"
+      v.numa_nodes = [
+        {:cpus => "0-1", :memory => "2048"},
+        {:cpus => "2-3", :memory => "2048"}
+      ]
+    end
+
+    n.vm.hostname = "cpt2.example.com"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "192.168.24.21"
+    n.vm.network "private_network",
+      libvirt__network_name: "storage",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "192.168.34.21"
+    n.vm.network "private_network",
+      libvirt__network_name: "internal-api",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "192.168.54.21"
+    n.vm.network "private_network",
+      libvirt__network_name: "tenant",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "none",
+      auto_config: false,
+      ip: "172.16.0.21"
   end
 end
