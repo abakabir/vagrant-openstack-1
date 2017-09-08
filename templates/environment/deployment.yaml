@@ -1,5 +1,5 @@
 parameter_defaults:
   OvercloudControlFlavor: control
   OvercloudComputeFlavor: compute
-  ControllerCount: 3
+  ControllerCount: 1
   ComputeCount: 2

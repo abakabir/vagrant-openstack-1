@@ -199,7 +199,6 @@ openstack server create --flavor m1.nano --nic net-id=`openstack network list | 
 # Test external networking using floating IPs
 openstack network create public --share --external --provider-network-type flat --provider-physical-network datacentre
 openstack subnet create public --network public --dhcp --allocation-pool start=10.0.0.20,end=10.0.0.50 --gateway 10.0.0.1 --subnet-range 10.0.0.0/24 --dns-nameserver 8.8.8.8
-openstack port create --network public --host `openstack server list | grep test1 | awk '{print $2}'` public
 
 openstack router create public
 openstack router set public --external-gateway public
