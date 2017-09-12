@@ -58,3 +58,5 @@ parameter_defaults:
   # for Linux bonds w/LACP, or "bond_mode=active-backup" for OVS active/backup.
   BondInterfaceOvsOptions: "bond_mode=active-backup"
   NeutronBridgeMappings: 'datacentre:br-ex'
+  # Fixed IPs for TLS/SSL
+  PublicVirtualFixedIPs: [{'ip_address':'10.0.0.9'}]
