@@ -126,3 +126,12 @@ resources:
       network_id: { get_resource: tenant_network }
       fixed_ips:
         - subnet_id: { get_resource: tenant_subnet }
+
+outputs:
+  instance1_show:
+    description: Test instance1 information
+    value: { get_attr: [test_instance1, show] }
+
+  instance2_show:
+    description: Test instance2 information
+    value: { get_attr: [test_instance2, show] }

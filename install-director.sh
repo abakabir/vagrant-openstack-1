@@ -205,7 +205,7 @@ openstack image create "centos7" \
 # openstack router add subnet public tenant
 # openstack floating ip create --port `os port list --server test1 -f value -c ID` public
 
-os stack create -t /home/stack/templates/heat/test-stack.yaml --parameter image_name=cirros test-stack1
+openstack stack create -t /home/stack/templates/heat/test-stack.yaml --parameter image_name=cirros test-stack1
 
 # Cleanup of external networking
 
