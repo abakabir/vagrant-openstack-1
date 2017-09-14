@@ -51,3 +51,42 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
     | | 3. 192.168.54.0/24
       | 4. 172.16.0.0/24  
 ```
+
+## How to use
+
+### Hypervisor setup
+
+1. Install Vagrant: https://www.vagrantup.com/
+
+2. Install vagrant-libvirt plugin: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
+
+```
+vagrant plugin install vagrant-libvirt
+```
+
+3. Install qemu and libvirt on your hypervisor/desktop. See https://github.com/vagrant-libvirt/vagrant-libvirt#installation for installation steps.
+
+```
+# Linux
+## Follow steps at above link
+
+# OSX 10.12.6 Sierra
+brew install libvirt qeumu gcc libtool automake gettext
+# for autopoint
+export PATH=/usr/local/Cellar/gettext/0.19.8.1/bin:$PATH
+
+git clone git://libvirt.org/libvirt.git && cd libvirt
+
+# compile
+./automake.sh --system
+make
+```
+
+
+
+# tech exchange
+- put some goals around what I am trying to get out of it 
+- monday - welcome reception with a bunch of booths: stop by there and talk to people, see how to get involved. 
+- TSM track 
+-
+

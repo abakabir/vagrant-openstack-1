@@ -26,10 +26,10 @@ openssl genrsa -out server.key.pem 2048
 cp /home/stack/templates/environment/openssl.cnf .
 
 # Run the following command to generate certificate signing request
-openssl req -config openssl.cnf -key server.key.pem -new -out server.csr.pem
+openssl req -config /home/stack/templates/environment/openssl.cnf -key server.key.pem -new -out server.csr.pem
 
 # CREATING THE SSL/TLS CERTIFICATE
-sudo openssl ca -config openssl.cnf -extensions v3_req -days 3650 -in server.csr.pem -out server.crt.pem -cert ca.crt.pem -keyfile ca.key.pem
+sudo openssl ca -config /home/stack/templates/environment/openssl.cnf -extensions v3_req -days 3650 -in server.csr.pem -out server.crt.pem -cert ca.crt.pem -keyfile ca.key.pem
 
 # ENABLING SSL/TLS
 # Copy the contents of the certificate file into the SSLCertificate parameter
