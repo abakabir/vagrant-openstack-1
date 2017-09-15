@@ -81,12 +81,3 @@ git clone git://libvirt.org/libvirt.git && cd libvirt
 ./automake.sh --system
 make
 ```
-
-
-
-# tech exchange
-- put some goals around what I am trying to get out of it 
-- monday - welcome reception with a bunch of booths: stop by there and talk to people, see how to get involved. 
-- TSM track 
--
-
