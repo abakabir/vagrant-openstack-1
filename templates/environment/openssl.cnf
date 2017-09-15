@@ -15,7 +15,7 @@ oid_section		= new_oids
 # To use this configuration file with the "-extfile" option of the
 # "openssl x509" utility, name here the section containing the
 # X.509v3 extensions to use:
-# extensions		= 
+# extensions		=
 # (Alternatively, use a configuration file that has only
 # X.509v3 extensions in its main [= default] section.)
 
@@ -114,7 +114,7 @@ req_extensions = v3_req
 # input_password = secret
 # output_password = secret
 
-# This sets a mask for permitted string types. There are several options. 
+# This sets a mask for permitted string types. There are several options.
 # default: PrintableString, T61String, BMPString.
 # pkix	 : PrintableString, BMPString (PKIX recommendation before 2004)
 # utf8only: only UTF8Strings (PKIX recommendation after 2004).
@@ -229,8 +229,8 @@ subjectAltName = @alt_names
 
 
 [alt_names]
-IP.1 = 10.0.0.31
-DNS.1 = 10.0.0.31
+IP.1 = 10.0.0.9
+DNS.1 = 10.0.0.9
 DNS.2 = 192.168.121.1
 
 [ v3_ca ]
