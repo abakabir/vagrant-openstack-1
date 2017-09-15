@@ -18,6 +18,11 @@ sudo echo '1000' | sudo tee /etc/pki/CA/serial
 openssl genrsa -out ca.key.pem 4096
 openssl req  -key ca.key.pem -new -x509 -days 7300 -extensions v3_ca -out ca.crt.pem
 
+# ADDING THE CERTIFICATE AUTHORITY TO CLIENTS
+# note: run these commands if certs are ever updated
+sudo cp ca.crt.pem /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust extract
+
 # CREATING AN SSL/TLS KEY
 openssl genrsa -out server.key.pem 2048
 
@@ -34,7 +39,7 @@ sudo openssl ca -config /home/stack/templates/environment/openssl.cnf -extension
 # ENABLING SSL/TLS
 # Copy the contents of the certificate file into the SSLCertificate parameter
 # Copy the contents of the private key into the SSLKey parameter
-# vi /home/stack/templates/environment/enable-tls.yam
+# vi /home/stack/templates/environment/enable-tls.yaml
 
 # INJECTING A ROOT CERTIFICATE
 # Copy the contents of the root certificate authority file into the SSLRootCertificate parameter

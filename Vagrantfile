@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "dir" do |n|
     n.vm.provider provider do |v|
-      v.memory = 8192
+      v.memory = 12288
       v.cpus = 4
     end
 
