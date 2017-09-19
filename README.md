@@ -90,25 +90,7 @@ vagrant box add homeski/rhel7.3-osp
 vagrant up dir
 ```
 
-7. Destroy the libvirt domains and detach the Vagrant NIC
-
-```shell
-for node in ctl1 cpt1 cpt2; do
-  virsh destroy vagrant-openstack_${node}
-  virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
-done
-```
-
-8. Grab the MAC addresses of the provisioning NICs
-
-```shell
-for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
-  MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
-  echo vagrant-openstack_${node}=${MAC}
-done
-```
-
-9. Libvirt VirtualPowerManager setup
+7. Libvirt VirtualPowerManager setup
 
 ```shell
 cat << EOF > /etc/polkit-1/localauthority/50-local.d/50-libvirt-user-stack.pkla
@@ -123,9 +105,13 @@ EOF
 
 ### Undercloud installation
 
-1. Add the initial user, subscribe the system, update and reboot
+1. SSH into the Director, add the initial user, subscribe the system, update and reboot
 
 ```shell
+vagrant ssh dir
+
+sudo su -
+
 useradd stack
 echo pass | passwd stack --stdin
 
@@ -149,15 +135,12 @@ sudo reboot now
 
 2. Setup the Undercloud
 
-SSH into the Director VM
+SSH into the Director, and install the Undercloud
+
 
 ```shell
 vagrant ssh dir
-```
 
-Install the Undercloud
-
-```shell
 sudo su - stack
 
 sudo yum install python-tripleoclient -y
@@ -190,12 +173,13 @@ openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `op
 3. Copy the SSH key to the hypervisor so that virtual IPMI works
 
 ```shell
+# Run this from the Director
 ssh-copy-id -i ~/.ssh/id_rsa.pub <your_user>@192.168.122.1
 ```
 
 ### Overcloud deployment
 
-1. Bring up all OSP nodes using Vagrant on the Hypervisor. **Note** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
+1. On the Hypervisor, bring up all OSP nodes using Vagrant . **Note** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
 
 ```shell
 vagrant up ctl1 && \
