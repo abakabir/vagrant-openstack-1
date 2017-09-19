@@ -10,7 +10,7 @@
 # Add stack user
 
 useradd stack
-passwd stack
+echo pass | passwd stack --stdin
 
 echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
 chmod 0440 /etc/sudoers.d/stack
@@ -19,7 +19,7 @@ su - stack
 
 # Register system
 
-sudo subscription-manager register
+sudo subscription-manager register --username=`echo foo` --password=`echo bar`
 sudo subscription-manager attach --pool=`cat ./pool-id`
 
 sudo subscription-manager repos --disable=*

@@ -7,17 +7,16 @@
 openstack flavor create --vcpus 1 --ram 512 --disk 1 m1.nano
 openstack flavor create --vcpus 1 --ram 512 --disk 10 m1.micro
 
-cd /home/stack/images
-wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
-wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img -O /home/stack/images/cirros-0.3.5-x86_64-disk.img
+wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2 /home/stack/images/CentOS-7-x86_64-GenericCloud.qcow2
 
 openstack image create "cirros" \
-  --file cirros-0.3.5-x86_64-disk.img \
+  --file /home/stack/images/cirros-0.3.5-x86_64-disk.img \
   --disk-format qcow2 --container-format bare \
   --public
 
 openstack image create "centos7" \
-  --file CentOS-7-x86_64-GenericCloud.qcow2 \
+  --file /home/stack/images/CentOS-7-x86_64-GenericCloud.qcow2 \
   --disk-format qcow2 --container-format bare \
   --public
 
