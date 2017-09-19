@@ -4,23 +4,24 @@
 
 Virtualized OSP 11 deployment using Vagrant and libvirt.
 
-## Bare metal used
+### Bare metal used
 
 - ATX Desktop tower
 - i7-4790K
-- 32GB DDR3
-- Linux Mint 18.
+- 32GB DDR3 RAM
+- Linux Mint 18
 
-## Tools
+### Tools
 
 - ansible
 - libvirt
+- qemu
 - vagrant
 - vagrant-libvirt
 
-## Networks
+### Networks
 
-### Controller
+#### Controller
 
 ```
 1. Provisioning / Control Plane
@@ -38,7 +39,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
           | 6. 10.0.0.0/24
 ```
 
-### Compute
+#### Compute
 
 ```
 1. Provisioning / Control Plane
@@ -52,7 +53,9 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
       | 4. 172.16.0.0/24
 ```
 
-## How to use
+## Why
+
+## How
 
 ### Hypervisor setup
 
@@ -179,7 +182,7 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub <your_user>@192.168.122.1
 
 ### Overcloud deployment
 
-1. On the Hypervisor, bring up all OSP nodes using Vagrant . **Note** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
+1. On the Hypervisor, bring up all OSP nodes using Vagrant. **Note:** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
 
 ```shell
 vagrant up ctl1 && \
@@ -191,7 +194,7 @@ vagrant up ctl1 && \
 
 2. In the `Vagrantfile`, we setup all the NICs that the controllers and computes need.
 
-Vagrant does something special and adds in an extra NIC as eth0. It uses this NIC to SSH into each machine. Director introspection and deployment expects eth0 to be the provisioning NIC, which causes issues. Here we remove the NIC added by Vagrant so introspection will work.
+**But,** Vagrant does something special and adds in an extra NIC as eth0. It uses this NIC to SSH into each machine. Director introspection and deployment expects eth0 to be the provisioning NIC, which causes issues. Here we remove the NIC added by Vagrant so introspection will work.
 
 ```shell
 # Detach vagrant-libvirt NIC on all nodes
@@ -238,7 +241,7 @@ cd /home/stack
 
 ### Test Overcloud deployment
 
-1. On the Director, deploy a test stack using a heat template. This stack will test:
+1. On the Director, deploy a test Heat stack using an already created template. This stack will test:
 
   - Instance creation works
   - Local image store using Glance works
@@ -246,7 +249,7 @@ cd /home/stack
   - External communication via a floating IP works
 
 
-```
+```shell
 vagrant ssh dir
 
 sudo su - stack
