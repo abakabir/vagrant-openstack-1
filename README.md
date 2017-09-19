@@ -29,7 +29,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 | | | 4. Internal API
 | | | | 5. Tenant
 | | | | | 6. External
-| | | | | |  
+| | | | | |
 | | | | | | 1. 192.168.24.0/24
   | | | | | 2. 192.168.34.0/24
     | | | | 3. 192.168.44.0/24
@@ -44,12 +44,12 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 1. Provisioning / Control Plane
 | 2. Storage
 | | 3. Internal API
-| | | 4. Tenant  
+| | | 4. Tenant
 | | | |
 | | | | 1. 192.168.24.0/24
   | | | 2. 192.168.34.0/24
     | | 3. 192.168.54.0/24
-      | 4. 172.16.0.0/24  
+      | 4. 172.16.0.0/24
 ```
 
 ## How to use
@@ -58,7 +58,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 
 - Setup SSH access
 
-```
+```shell
 systemctl start sshd
 ```
 
@@ -66,7 +66,7 @@ systemctl start sshd
 
 2. Install vagrant-libvirt plugin: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
 
-```
+```shell
 vagrant plugin install vagrant-libvirt
 ```
 
@@ -74,34 +74,34 @@ vagrant plugin install vagrant-libvirt
 
 4. Clone repository
 
-```
+```shell
 git clone git@github.com:homeski/vagrant-openstack.git
 ```
 
 5. Download vagrant image
 
-```
+```shell
 vagrant box add homeski/rhel7.3-osp
 ```
 
-6. Bring up boxes
+6. Bring up the director
 
-```
-./vagrant-up.sh
+```shell
+vagrant up dir
 ```
 
 7. Destroy the libvirt domains and detach the Vagrant NIC
 
-```
+```shell
 for node in ctl1 cpt1 cpt2; do
-virsh destroy vagrant-openstack_${node}
-virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
+  virsh destroy vagrant-openstack_${node}
+  virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
 done
 ```
 
 8. Grab the MAC addresses of the provisioning NICs
 
-```
+```shell
 for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
   MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
   echo vagrant-openstack_${node}=${MAC}
@@ -110,7 +110,7 @@ done
 
 9. Libvirt VirtualPowerManager setup
 
-```
+```shell
 cat << EOF > /etc/polkit-1/localauthority/50-local.d/50-libvirt-user-stack.pkla
 [libvirt Management Access]
 Identity=unix-user:`whoami`
@@ -125,7 +125,7 @@ EOF
 
 1. Add the initial user, subscribe the system, update and reboot
 
-```
+```shell
 useradd stack
 echo pass | passwd stack --stdin
 
@@ -147,11 +147,17 @@ sudo yum update -y
 sudo reboot now
 ```
 
-2. Setup the Undercloud 
+2. Setup the Undercloud
 
-```
+SSH into the Director VM
+
+```shell
 vagrant ssh dir
+```
 
+Install the Undercloud
+
+```shell
 sudo su - stack
 
 sudo yum install python-tripleoclient -y
@@ -181,17 +187,54 @@ ls -l /httpboot
 openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `openstack subnet list | grep ctlplane | awk '{print $2}'`
 ```
 
-3. Copy the SSH key to the hypervisor so that IPMI works
+3. Copy the SSH key to the hypervisor so that virtual IPMI works
 
-```
-ssh-copy-id -i ~/.ssh/id_rsa.pub homeski@192.168.122.1
+```shell
+ssh-copy-id -i ~/.ssh/id_rsa.pub <your_user>@192.168.122.1
 ```
 
 ### Overcloud deployment
 
-1. Deploy the overcloud 
+1. Bring up all OSP nodes using Vagrant on the Hypervisor. **Note** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
 
+```shell
+vagrant up ctl1 && \
+  vagrant up ctl2 && \
+  vagrant up ctl3 && \
+  vagrant up cpt1 && \
+  vagrant up cpt2 &&
 ```
+
+2. In the `Vagrantfile`, we setup all the NICs that the controllers and computes need.
+
+Vagrant does something special and adds in an extra NIC as eth0. It uses this NIC to SSH into each machine. Director introspection and deployment expects eth0 to be the provisioning NIC, which causes issues. Here we remove the NIC added by Vagrant so introspection will work.
+
+```shell
+# Detach vagrant-libvirt NIC on all nodes
+for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
+  virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
+done
+```
+
+3. Grab the MAC address of each provisioning NIC, to be used below
+
+```shell
+# Grab provisioning NIC MAC address for all nodes
+for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
+  MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
+  echo vagrant-openstack_${node}=${MAC}
+done
+```
+
+3. SSH into the Director and deploy the overcloud
+
+```shell
+vagrant ssh dir
+
+sudo su - stack
+
+source stackrc
+
 # Add MAC addresses to instackenv
 vi /home/stack/instackenv.json
 
@@ -199,8 +242,6 @@ vi /home/stack/instackenv.json
 
 openstack overcloud node import ~/instackenv.json
 openstack baremetal node list
-
-# Comment out eth0 on KVM domain on host
 
 openstack overcloud node introspect --all-manageable --provide
 

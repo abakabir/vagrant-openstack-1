@@ -70,7 +70,7 @@ EOF
 
 # Detach vagrant-libvirt NIC on all nodes
 for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
-virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
+  virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
 done
 
 # Grab provisioning NIC MAC address for all nodes
