@@ -78,3 +78,17 @@ for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
   MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
   echo vagrant-openstack_${node}=${MAC}
 done
+
+# Restart all computes using virsh
+virsh net-start provisioning
+virsh net-start storage
+virsh net-start storage-mgmt
+virsh net-start internal-api
+virsh net-start tenant
+virsh net-start external
+
+virsh start vagrant-openstack_ctl1
+virsh start vagrant-openstack_ctl2
+virsh start vagrant-openstack_ctl3
+virsh start vagrant-openstack_cpt1
+virsh start vagrant-openstack_cpt2

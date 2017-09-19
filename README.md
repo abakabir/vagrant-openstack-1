@@ -235,3 +235,37 @@ cd /home/stack
 
 ./templates/scripts/deploy-overcloud-multiple-nics.sh
 ```
+
+### Test Overcloud deployment
+
+1. On the Director, deploy a test stack using a heat template. This stack will test:
+
+  - Instance creation works
+  - Local image store using Glance works
+  - Communication between two instances using the tenant network works
+  - External communication via a floating IP works
+
+
+```
+vagrant ssh dir
+
+sudo su - stack
+
+source /home/stack/overcloudrc
+
+# Download Cirros cloud image
+wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img -O /home/stack/images/cirros-0.3.5-x86_64-disk.img
+
+
+# Create Glance image
+openstack image create "cirros" \
+  --file /home/stack/images/cirros-0.3.5-x86_64-disk.img \
+  --disk-format qcow2 --container-format bare \
+  --public
+
+# Launch the Heat stack which will create all the instances and networks needed
+openstack stack create -t /home/stack/templates/heat/test-stack.yaml --parameter image_name=cirros test-stack1 --wait
+
+# Get a KVM console into an instance and test
+nova get-vnc-console test1 novnc
+```
