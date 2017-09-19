@@ -55,6 +55,13 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 
 ## Why
 
+- Faster deployment times from zero to fully functioning Overcloud
+- Test Director/Heat template creation
+- Mimic client installs to be better prepared
+- Recreate typical Openstack failures and learn to debug
+- Practice operating Openstack in a non-critical environment
+- Mimic different network architectures virtually
+
 ## How
 
 ### Hypervisor setup
