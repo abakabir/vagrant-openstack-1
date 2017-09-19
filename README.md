@@ -56,41 +56,41 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 
 ### Hypervisor setup
 
-- Setup SSH access
+1. Setup SSH access
 
 ```shell
 systemctl start sshd
 ```
 
-1. Install Vagrant: https://www.vagrantup.com/
+2. Install Vagrant: https://www.vagrantup.com/
 
-2. Install vagrant-libvirt plugin: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
+3. Install vagrant-libvirt plugin: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
 
 ```shell
 vagrant plugin install vagrant-libvirt
 ```
 
-3. Install qemu and libvirt on your hypervisor/desktop: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
+4. Install qemu and libvirt on your hypervisor/desktop: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
 
-4. Clone repository
+5. Clone repository
 
 ```shell
 git clone git@github.com:homeski/vagrant-openstack.git
 ```
 
-5. Download vagrant image
+6. Download vagrant image
 
 ```shell
 vagrant box add homeski/rhel7.3-osp
 ```
 
-6. Bring up the director
+7. Bring up the director
 
 ```shell
 vagrant up dir
 ```
 
-7. Libvirt VirtualPowerManager setup
+8. Libvirt VirtualPowerManager setup
 
 ```shell
 cat << EOF > /etc/polkit-1/localauthority/50-local.d/50-libvirt-user-stack.pkla
