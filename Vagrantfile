@@ -35,8 +35,8 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      ip: "192.168.24.2"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "external",
       libvirt__dhcp_enabled: false,
@@ -54,33 +54,28 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.24.10"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.34.10"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage-mgmt",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.44.10"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "internal-api",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.54.10"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "tenant",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "172.16.0.10"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "external",
       libvirt__dhcp_enabled: false,
@@ -99,33 +94,28 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.24.11"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.34.11"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage-mgmt",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.44.11"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "internal-api",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.54.11"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "tenant",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "172.16.0.11"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "external",
       libvirt__dhcp_enabled: false,
@@ -144,33 +134,28 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.24.12"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.34.12"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage-mgmt",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.44.12"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "internal-api",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.54.12"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "tenant",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "172.16.0.12"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "external",
       libvirt__dhcp_enabled: false,
@@ -190,27 +175,23 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.24.20"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.34.20"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "internal-api",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.54.20"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "tenant",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "172.16.0.20"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
   end
 
   config.vm.define "cpt2" do |n|
@@ -228,25 +209,22 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "provisioning",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.24.21"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "storage",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.34.21"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "internal-api",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
-      auto_config: false,
-      ip: "192.168.54.21"
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
     n.vm.network "private_network",
       libvirt__network_name: "tenant",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "none",
+      libvirt__forward_mode: "veryisolated",
       auto_config: false,
       ip: "172.16.0.21"
   end
