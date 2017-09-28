@@ -55,10 +55,11 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 
 ## Why
 
+- No space or money to buy hardware
 - Faster deployment times from zero to fully functioning Overcloud
 - Test Director/Heat template creation
 - Mimic client installs to be better prepared
-- Recreate typical Openstack failures and learn to debug
+- Recreate typical Openstack failures and practice debugging
 - Practice operating Openstack in a non-critical environment
 - Mimic different network architectures virtually
 
@@ -80,7 +81,7 @@ systemctl start sshd
 vagrant plugin install vagrant-libvirt
 ```
 
-4. Install qemu and libvirt on your hypervisor/desktop: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
+4. Install qemu and libvirt on your hypervisor: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
 
 5. Clone repository
 
@@ -132,7 +133,7 @@ su - stack
 
 # Register system
 
-sudo subscription-manager register --username=`echo foo` --password=`echo bar`
+sudo subscription-manager register --username=hpawlows@redhat.com --password="GoRaiders!!22"
 sudo subscription-manager attach --pool=`cat ./pool-id`
 
 sudo subscription-manager repos --disable=*
@@ -158,8 +159,12 @@ sudo yum install python-tripleoclient -y
 mkdir ~/images
 cp -r /templates /home/stack/templates
 cp /templates/undercloud/undercloud.conf /home/stack/
+cp /templates/undercloud/instackenv.json /home/stack/
 
 time openstack undercloud install
+# real    11m38.754s
+# user    7m38.477s
+# sys     0m56.079s
 
 sudo systemctl list-units openstack-*
 
@@ -184,7 +189,7 @@ openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `op
 
 ```shell
 # Run this from the Director
-ssh-copy-id -i ~/.ssh/id_rsa.pub <your_user>@192.168.122.1
+ssh-copy-id -i ~/.ssh/id_rsa.pub homeski@192.168.122.1
 ```
 
 ### Overcloud deployment
@@ -215,7 +220,7 @@ done
 ```shell
 # Grab provisioning NIC MAC address for all nodes
 for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
-  MAC=`virsh dumpxml vagrant-openstack_${node} | grep -B4 provisioning | grep mac | cut -d "'" -f2`
+  MAC=`virsh dumpxml vagrant-openstack_${node} 2> /dev/null | grep -B4 provisioning | grep mac | cut -d "'" -f2`
   echo vagrant-openstack_${node}=${MAC}
 done
 ```
@@ -244,6 +249,9 @@ openstack overcloud profiles list
 cd /home/stack
 
 ./templates/scripts/deploy-overcloud-multiple-nics.sh
+# real    25m36.361s
+# user    0m3.011s
+# sys     0m0.251s
 ```
 
 ### Test Overcloud deployment
@@ -265,7 +273,6 @@ source /home/stack/overcloudrc
 
 # Download Cirros cloud image
 wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img -O /home/stack/images/cirros-0.3.5-x86_64-disk.img
-
 
 # Create Glance image
 openstack image create "cirros" \
