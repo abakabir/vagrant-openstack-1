@@ -225,7 +225,6 @@ Vagrant.configure("2") do |config|
       libvirt__network_name: "tenant",
       libvirt__dhcp_enabled: false,
       libvirt__forward_mode: "veryisolated",
-      auto_config: false,
-      ip: "172.16.0.21"
+      auto_config: false
   end
 end
