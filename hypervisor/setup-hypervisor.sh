@@ -92,3 +92,14 @@ virsh start vagrant-openstack_ctl2
 virsh start vagrant-openstack_ctl3
 virsh start vagrant-openstack_cpt1
 virsh start vagrant-openstack_cpt2
+
+# ----------------------- #
+# --- Useful commands --- #
+# ----------------------- #
+
+# Monitor hypervisor info
+watch 'free -h; echo ""; df -h; echo ""; virsh list; echo ""; ps aux  | awk '\''{print $6/1024 " MB\t\t" $11}'\''  | sort -n | tail'
+
+# Show process MB usage
+ps aux  | awk '{print $6/1024 " MB\t\t" $11}'  | sort -n
+

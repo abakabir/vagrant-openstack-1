@@ -22,7 +22,7 @@ openstack image create "centos7" \
 
 # Test tenant networking
 # openstack network create tenant
-# openstack subnet create tenant --network tenant --dhcp --allocation-pool start=172.16.0.20,end=172.16.0.50 --gateway 172.16.0.1 --subnet-range 172.16.0.0/24 --dns-nameserver 8.8.8.8
+# openstack subnet create tenant --network tenant --dhcp --allocation-pool start=172.16.0.20,end=172.16.0.50 --gateway 172.16.0.1 --subnet-range 172.16.0.0/24
 # openstack server create --flavor m1.nano --nic net-id=`openstack network list | grep tenant | awk '{print $2}'` --image cirros test1
 # openstack server create --flavor m1.nano --nic net-id=`openstack network list | grep tenant | awk '{print $2}'` --image cirros test2
 
@@ -33,19 +33,13 @@ openstack image create "centos7" \
 # openstack router create public
 # openstack router set public --external-gateway public
 # openstack router add subnet public tenant
-# openstack floating ip create --port `os port list --server test1 -f value -c ID` public
+# openstack floating ip create --port `openstack port list --server test1 -f value -c ID` public
 
 openstack stack create -t /home/stack/templates/heat/test-stack.yaml --parameter image_name=cirros test-stack1 --wait
 
 # ----------------------- #
 # --- Useful commands --- #
 # ----------------------- #
-
-# Monitor hypervisor info
-watch 'free -h; echo ""; df -h; echo ""; virsh list; echo ""; ps aux  | awk '\''{print $6/1024 " MB\t\t" $11}'\''  | sort -n | tail'
-
-# Show process MB usage
-ps aux  | awk '{print $6/1024 " MB\t\t" $11}'  | sort -n
 
 # Delete all baremetal servers
 for i in `os baremetal node list | grep available | awk '{print $2}'`; do os baremetal node delete $i; done

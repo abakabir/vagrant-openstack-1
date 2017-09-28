@@ -68,8 +68,6 @@ resources:
           end: 172.16.0.50
       gateway_ip: 172.16.0.1
       cidr: 172.16.0.0/24
-      dns_nameservers:
-        - 8.8.8.8
 
   public_network:
     type: OS::Neutron::ProviderNet

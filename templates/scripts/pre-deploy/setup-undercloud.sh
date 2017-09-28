@@ -40,6 +40,7 @@ sudo yum install python-tripleoclient -y
 mkdir ~/images
 cp -r /templates /home/stack/templates
 cp /templates/undercloud/undercloud.conf /home/stack/
+cp /templates/undercloud/instackenv.json /home/stack/
 
 #  Deploy Undercloud
 
