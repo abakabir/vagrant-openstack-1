@@ -58,7 +58,6 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 - No space or money to buy hardware
 - Faster deployment times from zero to fully functioning Overcloud
 - Test Director/Heat template creation
-- Mimic client installs to be better prepared
 - Recreate typical Openstack failures and practice debugging
 - Practice operating Openstack in a non-critical environment
 - Mimic different network architectures virtually
@@ -92,7 +91,9 @@ git clone git@github.com:homeski/vagrant-openstack.git
 6. Download vagrant image
 
 ```shell
-vagrant box add homeski/rhel7.3-osp
+wget http://file.rdu.redhat.com/\~hpawlows/rhel7.3-osp.box
+
+vagrant box add rhel7.3-osp.box --name homeski/rhel7.3-osp
 ```
 
 7. Bring up the director
