@@ -25,32 +25,32 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 
 ```
 1. Provisioning / Control Plane
-| 2. Storage
-| | 3. Storage Management
-| | | 4. Internal API
-| | | | 5. Tenant
-| | | | | 6. External
-| | | | | |
-| | | | | | 1. 192.168.24.0/24
-  | | | | | 2. 192.168.34.0/24
-    | | | | 3. 192.168.44.0/24
-      | | | 4. 192.168.54.0/24
-        | | 5. 172.16.0.0/24
-          | 6. 10.0.0.0/24
+2. Storage
+3. Storage Management
+4. Internal API
+5. Tenant
+6. External
+
+1. 192.168.24.0/24
+2. 192.168.34.0/24
+3. 192.168.44.0/24
+4. 192.168.54.0/24
+5. 172.16.0.0/24
+6. 10.0.0.0/24
 ```
 
 #### Compute
 
 ```
 1. Provisioning / Control Plane
-| 2. Storage
-| | 3. Internal API
-| | | 4. Tenant
-| | | |
-| | | | 1. 192.168.24.0/24
-  | | | 2. 192.168.34.0/24
-    | | 3. 192.168.54.0/24
-      | 4. 172.16.0.0/24
+2. Storage
+3. Internal API
+4. Tenant
+
+1. 192.168.24.0/24
+2. 192.168.34.0/24
+3. 192.168.54.0/24
+4. 172.16.0.0/24
 ```
 
 ## Why
@@ -82,7 +82,7 @@ systemctl start sshd
 vagrant plugin install vagrant-libvirt
 ```
 
-5. Download Vagrant box
+5. Download the Vagrant box
 
 ```shell
 wget http://file.rdu.redhat.com/\~hpawlows/rhel7.3-osp.box
@@ -90,7 +90,7 @@ wget http://file.rdu.redhat.com/\~hpawlows/rhel7.3-osp.box
 vagrant box add rhel7.3-osp.box --name homeski/rhel7.3-osp
 ```
 
-6. Clone repository
+6. Clone the repository
 
 ```shell
 git clone https://gitlab.cee.redhat.com/hpawlows/vagrant-openstack.git
@@ -272,7 +272,7 @@ mv instackenv.json.tmp instackenv.json
 jq ". | .nodes[].pm_password = \"$(cat /home/stack/.ssh/id_rsa)\"" instackenv.json > instackenv.json.tmp
 mv instackenv.json.tmp instackenv.json
 
-Import "baremetal"
+# Import "baremetal"
 openstack overcloud node import ~/instackenv.json
 openstack baremetal node list
 
@@ -288,7 +288,7 @@ cd /home/stack
 # sys     0m0.251s
 ```
 
-### Test Overcloud deployment
+### Test the Overcloud
 
 1. On the Director, deploy a test Heat stack using an already created template. This stack will test:
 
@@ -320,3 +320,7 @@ openstack stack create -t /home/stack/osp11/heat/test-stack.yaml --parameter ima
 # Get a KVM console into an instance and test
 nova get-vnc-console test1 novnc
 ```
+
+### Acknowledgements
+
+- https://keithtenzer.com/2015/10/14/howto-openstack-deployment-using-tripleo-and-the-red-hat-openstack-director/
