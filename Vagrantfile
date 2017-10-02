@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
       v.cpus = 4
     end
 
-    n.vm.synced_folder "templates/", "/templates", type: 'rsync'
+    n.vm.synced_folder ".", "/vagrant", type: 'rsync'
 
     n.vm.hostname = "dir.example.com"
     n.vm.network "private_network",

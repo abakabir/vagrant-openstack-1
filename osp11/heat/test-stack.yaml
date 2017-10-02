@@ -117,6 +117,8 @@ resources:
       network_id: { get_resource: tenant_network }
       fixed_ips:
         - subnet_id: { get_resource: tenant_subnet }
+      security_groups:
+        - { get_resource: test_security_group }
 
   test_instance2_port:
     type: OS::Neutron::Port
@@ -124,6 +126,16 @@ resources:
       network_id: { get_resource: tenant_network }
       fixed_ips:
         - subnet_id: { get_resource: tenant_subnet }
+      security_groups:
+        - { get_resource: test_security_group }
+
+  test_security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: test_security_group
+      rules:
+        - { direction: ingress, ethertype: IPv4, protocol: ICMP }
+        - { direction: ingress, ethertype: IPv4, protocol: TCP, port_range_min: 22, port_range_max: 22 }
 
 outputs:
   instance1_show:

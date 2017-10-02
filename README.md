@@ -74,21 +74,15 @@ systemctl start sshd
 
 2. Install Vagrant: https://www.vagrantup.com/
 
-3. Install vagrant-libvirt plugin: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
+3. Install qemu and libvirt on your hypervisor: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
+
+4. Install vagrant-libvirt plugin: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
 
 ```shell
 vagrant plugin install vagrant-libvirt
 ```
 
-4. Install qemu and libvirt on your hypervisor: https://github.com/vagrant-libvirt/vagrant-libvirt#installation
-
-5. Clone repository
-
-```shell
-git clone git@github.com:homeski/vagrant-openstack.git
-```
-
-6. Download vagrant image
+5. Download Vagrant box
 
 ```shell
 wget http://file.rdu.redhat.com/\~hpawlows/rhel7.3-osp.box
@@ -96,13 +90,31 @@ wget http://file.rdu.redhat.com/\~hpawlows/rhel7.3-osp.box
 vagrant box add rhel7.3-osp.box --name homeski/rhel7.3-osp
 ```
 
-7. Bring up the director
+6. Clone repository
+
+```shell
+git clone https://gitlab.cee.redhat.com/hpawlows/vagrant-openstack.git
+cd vagrant-openstack
+```
+
+7. Setup your credentials for registering the systems.
+
+You'll also need the pool-id that the system will register to. If you don't know, you can `vagrant ssh dir` into the box and run `subscription-manager list --available` to find a pool-id to use.
+
+```
+cp credentials.sample credentials
+
+# Edit the file with your credentials
+vim credentials
+```
+
+8. Bring up only the Director
 
 ```shell
 vagrant up dir
 ```
 
-8. Libvirt VirtualPowerManager setup
+9. Libvirt VirtualPowerManager setup
 
 ```shell
 cat << EOF > /etc/polkit-1/localauthority/50-local.d/50-libvirt-user-stack.pkla
@@ -117,30 +129,37 @@ EOF
 
 ### Undercloud installation
 
+The following commands are pretty much copied from https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/11/html-single/director_installation_and_usage/.
+
 1. SSH into the Director, add the initial user, subscribe the system, update and reboot
 
 ```shell
+# SSH to box
 vagrant ssh dir
 
+# Change to Root
 sudo su -
 
+# Create stack user
 useradd stack
 echo pass | passwd stack --stdin
 
+# Give stack user passwordless sudo
 echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
 chmod 0440 /etc/sudoers.d/stack
 
+# Change to stack user
 su - stack
 
-# Register system
-
-sudo subscription-manager register --username=hpawlows@redhat.com --password="GoRaiders!!22"
-sudo subscription-manager attach --pool=`cat ./pool-id`
+# Register the system
+sudo subscription-manager register --username=`grep username= /vagrant/credentials | cut -d '=' -f2` --password=`grep password= /vagrant/credentials | cut -d '=' -f2`
+sudo subscription-manager attach --pool=`grep pool-id= /vagrant/credentials | cut -d '=' -f2`
 
 sudo subscription-manager repos --disable=*
 sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-11-rpms
 
-sudo yum install git vim tmux tree -y
+# Install packages and update
+sudo yum install git vim tmux tree wget -y
 sudo yum update -y
 sudo reboot now
 ```
@@ -157,23 +176,27 @@ sudo su - stack
 
 sudo yum install python-tripleoclient -y
 
+# Copy templates to stack's home directory
 mkdir ~/images
-cp -r /templates /home/stack/templates
-cp /templates/undercloud/undercloud.conf /home/stack/
-cp /templates/undercloud/instackenv.json /home/stack/
+cp -R /vagrant/osp11/ /home/stack/
+cp /home/stack/osp11/undercloud/undercloud.conf /home/stack/
+cp /home/stack/osp11/undercloud/instackenv.json /home/stack/
 
+# Install Undercloud
 time openstack undercloud install
 # real    11m38.754s
 # user    7m38.477s
 # sys     0m56.079s
 
+# Verify services started
 sudo systemctl list-units openstack-*
 
 source ~/stackrc
 
+# Install images
 sudo yum install rhosp-director-images rhosp-director-images-ipa -y
 
-cd ~/images
+cd /home/stack/images
 for i in /usr/share/rhosp-director-images/overcloud-full-latest-11.0.tar /usr/share/rhosp-director-images/ironic-python-agent-latest-11.0.tar; do
   tar -xvf $i;
 done
@@ -183,6 +206,7 @@ openstack overcloud image upload --image-path /home/stack/images/
 openstack image list
 ls -l /httpboot
 
+# Set DNS servers
 openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `openstack subnet list | grep ctlplane | awk '{print $2}'`
 ```
 
@@ -190,22 +214,22 @@ openstack subnet set --dns-nameserver 192.168.121.1 --dns-nameserver 8.8.8.8 `op
 
 ```shell
 # Run this from the Director
-ssh-copy-id -i ~/.ssh/id_rsa.pub homeski@192.168.122.1
+
+# It let's the Undercloud VM SSH into the hypervisor without a password
+ssh-copy-id -i ~/.ssh/id_rsa.pub <hypervisor_user>@192.168.122.1
 ```
 
 ### Overcloud deployment
 
-1. On the Hypervisor, bring up all OSP nodes using Vagrant. **Note:** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
+1. On the Hypervisor, bring up all the OSP nodes using Vagrant. **Note:** Bring the machines up 1 at a time, otherwise vagrant-libvirt seems to crash
 
 ```shell
 vagrant up ctl1 && \
-  vagrant up ctl2 && \
-  vagrant up ctl3 && \
   vagrant up cpt1 && \
-  vagrant up cpt2 &&
+  vagrant up cpt2
 ```
 
-2. In the `Vagrantfile`, we setup all the NICs that the controllers and computes need.
+2. In the `Vagrantfile`, all the NICs that the controllers and computes need are already setup.
 
 **But,** Vagrant does something special and adds in an extra NIC as eth0. It uses this NIC to SSH into each machine. Director introspection and deployment expects eth0 to be the provisioning NIC, which causes issues. Here we remove the NIC added by Vagrant so introspection will work.
 
@@ -216,17 +240,9 @@ for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
 done
 ```
 
-3. Grab the MAC address of each provisioning NIC, to be used below
+3. The following commands are pretty much copied from https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/11/html-single/director_installation_and_usage/.
 
-```shell
-# Grab provisioning NIC MAC address for all nodes
-for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
-  MAC=`virsh dumpxml vagrant-openstack_${node} 2> /dev/null | grep -B4 provisioning | grep mac | cut -d "'" -f2`
-  echo vagrant-openstack_${node}=${MAC}
-done
-```
-
-3. SSH into the Director and deploy the overcloud
+SSH into the Director and deploy the overcloud
 
 ```shell
 vagrant ssh dir
@@ -236,10 +252,27 @@ sudo su - stack
 source stackrc
 
 # Add MAC addresses to instackenv
-vi /home/stack/instackenv.json
+# vi /home/stack/instackenv.json
 
-# Import "baremetal"
+# Find MAC address and save it to instackenv.json
+for node in ctl1 ctl2 ctl3 cpt1 cpt2; do
+  # Grab the MAC address of the node from the hypervisor
+  MAC=$(ssh homeski@192.168.121.1 "virsh dumpxml vagrant-openstack_${node} 2> /dev/null | grep -B4 provisioning | grep mac | cut -d \"'\" -f2")\
+  # Write the MAC address to the appropiate node and write to a tmp file
+  jq "(.nodes[] | select(.name == \"${node}\") | .mac[0] ) = \"${MAC}\"" instackenv.json > instackenv.json.tmp
+  # Save changes
+  mv instackenv.json.tmp instackenv.json
+done
 
+# Filter out any nodes without a MAC address
+jq '. | .nodes = [(.nodes[] | select(.mac[0] != ""))]' instackenv.json  > instackenv.json.tmp
+mv instackenv.json.tmp instackenv.json
+
+# Set the SSH key for IPMI
+jq ". | .nodes[].pm_password = \"$(cat /home/stack/.ssh/id_rsa)\"" instackenv.json > instackenv.json.tmp
+mv instackenv.json.tmp instackenv.json
+
+Import "baremetal"
 openstack overcloud node import ~/instackenv.json
 openstack baremetal node list
 
@@ -249,7 +282,7 @@ openstack overcloud profiles list
 
 cd /home/stack
 
-./templates/scripts/deploy-overcloud-multiple-nics.sh
+./osp11/scripts/deploy-overcloud-multiple-nics.sh
 # real    25m36.361s
 # user    0m3.011s
 # sys     0m0.251s
@@ -282,7 +315,7 @@ openstack image create "cirros" \
   --public
 
 # Launch the Heat stack which will create all the instances and networks needed
-openstack stack create -t /home/stack/templates/heat/test-stack.yaml --parameter image_name=cirros test-stack1 --wait
+openstack stack create -t /home/stack/osp11/heat/test-stack.yaml --parameter image_name=cirros test-stack1 --wait
 
 # Get a KVM console into an instance and test
 nova get-vnc-console test1 novnc
