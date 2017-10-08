@@ -324,3 +324,6 @@ nova get-vnc-console test1 novnc
 ### Acknowledgements
 
 - https://keithtenzer.com/2015/10/14/howto-openstack-deployment-using-tripleo-and-the-red-hat-openstack-director/
+- https://docs.openstack.org/tripleo-quickstart/latest/configuration.html#consuming-external-images
+- https://mojo.redhat.com/groups/openstack-community-of-practice/projects/openstack-cop-pre-sales-track/blog/2016/09/21/try-out-open-stack-director-with-libvirt-vagrant-and-ansible
+- https://gitlab.cee.redhat.com/kvanbesi/ospdlab
