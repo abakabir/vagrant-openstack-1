@@ -276,7 +276,10 @@ mv instackenv.json.tmp instackenv.json
 openstack overcloud node import ~/instackenv.json
 openstack baremetal node list
 
-openstack overcloud node introspect --all-manageable --provide
+time openstack overcloud node introspect --all-manageable --provide
+# real    3m4.432s
+# user    0m0.417s
+# sys     0m0.046s
 
 openstack overcloud profiles list
 
