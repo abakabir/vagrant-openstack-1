@@ -148,6 +148,13 @@ resources:
                 - type: interface
                   name: nic6
                   primary: true
+              - type: ovs_bridge
+                name: br-baremetal
+                use_dhcp: false
+                members:
+                - type: interface
+                  name: nic7
+                  primary: true
             # Uncomment when including environments/network-management.yaml
             # If setting default route on the Management interface, comment
             # out the default route on the External interface. This will

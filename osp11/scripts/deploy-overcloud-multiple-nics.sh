@@ -3,10 +3,11 @@
 . /home/stack/stackrc
 
 time openstack overcloud deploy --templates \
+  -e /home/stack/osp11/templates/environment/node-info.yaml \
   -e /home/stack/osp11/templates/environment/network-environment-multiple-nics.yaml \
   -e /home/stack/osp11/templates/environment/network-isolation.yaml \
   -e /home/stack/osp11/templates/environment/storage-environment.yaml \
-  -e /home/stack/osp11/templates/environment/deployment.yaml \
+  -e /home/stack/osp11/templates/environment/services/ironic.yaml \
   --ntp-server pool.ntp.org
 
 # -e /home/stack/osp11/templates/environment/enable-tls.yaml \
