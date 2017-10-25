@@ -242,4 +242,35 @@ Vagrant.configure("2") do |config|
       libvirt__forward_mode: "veryisolated",
       auto_config: false
   end
+
+  config.vm.define "node0" do |n|
+    n.vm.provider provider do |v|
+      v.memory = 1024
+      v.cpus = 1
+      v.cpu_mode = "host-passthrough"
+    end
+
+    n.vm.hostname = "node0.example.com"
+    n.vm.network "private_network",
+      libvirt__network_name: "baremetal",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "route",
+      auto_config: false,
+      ip: "192.168.64.0"
+  end
+  config.vm.define "node1" do |n|
+    n.vm.provider provider do |v|
+      v.memory = 1024
+      v.cpus = 1
+      v.cpu_mode = "host-passthrough"
+    end
+
+    n.vm.hostname = "node1.example.com"
+    n.vm.network "private_network",
+      libvirt__network_name: "baremetal",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "route",
+      auto_config: false,
+      ip: "192.168.64.0"
+  end
 end

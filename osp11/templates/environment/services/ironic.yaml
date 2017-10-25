@@ -14,3 +14,8 @@ parameter_defaults:
     - ComputeFilter
     - ComputeCapabilitiesFilter
     - ImagePropertiesFilter
+
+  IronicEnabledDrivers: pxe_ssh
+
+  ControllerExtraConfig:
+    Ironic::neutron::cleaning_network: uuid-here

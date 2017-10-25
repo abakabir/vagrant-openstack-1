@@ -30,6 +30,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 4. Internal API
 5. Tenant
 6. External
+7. Baremetal 
 
 1. 192.168.24.0/24
 2. 192.168.34.0/24
@@ -37,6 +38,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 4. 192.168.54.0/24
 5. 172.16.0.0/24
 6. 10.0.0.0/24
+7. 192.168.64.0/24
 ```
 
 #### Compute
