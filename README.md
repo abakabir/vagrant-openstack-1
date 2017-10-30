@@ -326,6 +326,151 @@ openstack stack create -t /home/stack/osp11/heat/test-stack.yaml --parameter ima
 nova get-vnc-console test1 novnc
 ```
 
+### Ironic on the Overcloud
+
+```
+vagrant ssh dir
+
+sudo su - stack
+
+source overcloudrc
+
+# Configuring OpenStack networking
+
+openstack network create \
+  --provider-network-type flat \
+  --provider-physical-network baremetal \
+  --share baremetal-network
+
+openstack subnet create \
+  --network baremetal-network \
+  --subnet-range 192.168.64.0/24 \
+  --ip-version 4 \
+  --gateway 192.168.64.1 \
+  --allocation-pool start=192.168.64.10,end=192.168.64.20 \
+  --dhcp baremetal-subnet
+
+openstack router create baremetal-router
+
+openstack router add subnet baremetal-router baremetal-subnet
+
+# edit IronicCleaningNetwork in templates
+# use ansible here ...
+# cleaning_network = <None>
+# systemctl restart openstack-ironic-conductor.service
+source /home/stack/stackrc
+ansible-playbook -i /home/stack/osp11/ansible/hosts.py -e "uuid=$(. /home/stack/overcloudrc; os network show baremetal-network -c id -f value)" /home/stack/osp11/ansible/playbook-ironic-overcloud.yaml  
+
+
+## Creating the Baremetal flavor
+
+source /home/stack/overcloudrc
+
+openstack flavor create \
+  --id auto --ram 1024  \
+  --vcpus 1 --disk 40 \
+  --property baremetal=true \
+  --public baremetal
+
+## Preparing the Deploy Images
+
+openstack image create \
+  --container-format aki \
+  --disk-format aki \
+  --public \
+  --file /home/stack/images/ironic-python-agent.kernel bm-deploy-kernel
+
+openstack image create \
+  --container-format ari \
+  --disk-format ari \
+  --public \
+  --file /home/stack/images/ironic-python-agent.initramfs bm-deploy-ramdisk
+
+## Preparing the User Image
+
+wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2 -O /home/stack/images/CentOS-7-x86_64-GenericCloud.qcow2
+
+export DIB_LOCAL_IMAGE=/home/stack/images/CentOS-7-x86_64-GenericCloud.qcow2
+
+disk-image-create centos7 baremetal -o centos-image
+
+KERNEL_ID=$(openstack image create \
+  --file centos-image.vmlinuz --public \
+  --container-format aki --disk-format aki \
+  -f value -c id centos-image.vmlinuz)
+
+RAMDISK_ID=$(openstack image create \
+  --file centos-image.initrd --public \
+  --container-format ari --disk-format ari \
+  -f value -c id centos-image.initrd)
+
+openstack image create \
+  --file centos-image.qcow2  --public \
+  --container-format bare \
+  --disk-format qcow2 \
+  --property kernel_id=$KERNEL_ID \
+  --property ramdisk_id=$RAMDISK_ID \
+  centos-image
+
+## Enrolling a Bare Metal Node With an Inventory File
+
+# create file using jq here
+## vagrant up node0
+# Detach vagrant-libvirt NIC on all nodes
+for node in node0 node1; do
+  virsh detach-interface vagrant-openstack_${node} network --persistent --mac `virsh dumpxml vagrant-openstack_${node} | grep -B4 vagrant-libvirt | grep mac | cut -d "'" -f2`
+done
+
+FILE=/home/stack/osp11/overcloud/baremetal.json
+
+# Find MAC address and save it to ${FILE}
+for node in node0; do
+  # Grab the MAC address of the node from the hypervisor
+  MAC=$(ssh homeski@192.168.121.1 "virsh dumpxml vagrant-openstack_${node} 2> /dev/null | grep -B4 baremetal | grep mac | cut -d \"'\" -f2")\
+  # Write the MAC address to the appropiate node and write to a tmp file
+  jq "(.nodes[] | select(.name == \"${node}\") | .ports[0].address ) = \"${MAC}\"" ${FILE} > ${FILE}.tmp
+  # Save changes
+  mv ${FILE}.tmp ${FILE}
+done
+
+# Filter out any nodes without a MAC address
+jq '. | .nodes = [(.nodes[] | select(.ports[0].address != ""))]' ${FILE}  > ${FILE}.tmp
+mv ${FILE}.tmp ${FILE}
+
+# Set the SSH key for IPMI
+jq ". | .nodes[].driver_info.ssh_key_contents = \"$(cat /home/stack/.ssh/id_rsa)\"" ${FILE} > ${FILE}.tmp
+mv ${FILE}.tmp ${FILE}
+
+openstack baremetal create /home/stack/osp11/overcloud/baremetal.json
+
+openstack baremetal node set node0 \
+  --driver-info deploy_kernel=$(openstack image show bm-deploy-kernel -f value -c id) \
+  --driver-info deploy_ramdisk=$(openstack image show bm-deploy-ramdisk -f value -c id)
+
+openstack baremetal node list
+
+# provide nodes here
+openstack baremetal node manage node0
+openstack baremetal node provide node0
+
+## Using Host Aggregates to Separate Physical and Virtual Machine Provisioning
+
+openstack flavor set baremetal --property baremetal=true
+
+# openstack flavor set FLAVOR_NAME --property baremetal=false
+
+openstack aggregate create --property baremetal=true baremetal-hosts
+openstack aggregate create --property baremetal=false virtual-hosts
+
+# openstack aggregate add host baremetal-hosts HOSTNAME
+# openstack aggregate add host virtual-hosts HOSTNAME
+openstack aggregate add host baremetal-hosts overcloud-controller-0.localdomain
+openstack aggregate add host virtual-hosts overcloud-compute-0.localdomain 
+openstack aggregate add host virtual-hosts overcloud-compute-1.localdomain 
+
+
+```
+
 ### Acknowledgements
 
 - https://keithtenzer.com/2015/10/14/howto-openstack-deployment-using-tripleo-and-the-red-hat-openstack-director/
