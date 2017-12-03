@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "baremetal",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "routed",
+      libvirt__forward_mode: "route",
       auto_config: false,
       ip: "192.168.64.0"
   end
