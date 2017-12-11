@@ -1,0 +1,21 @@
+resource_registry:
+  OS::TripleO::Services::IronicApi: /usr/share/openstack-tripleo-heat-templates/puppet/services/ironic-api.yaml
+  OS::TripleO::Services::IronicConductor: /usr/share/openstack-tripleo-heat-templates/puppet/services/ironic-conductor.yaml
+  OS::TripleO::Services::NovaIronic: /usr/share/openstack-tripleo-heat-templates/puppet/services/nova-ironic.yaml
+parameter_defaults:
+  NovaSchedulerDiscoverHostsInCellsInterval: 15
+
+  NovaSchedulerDefaultFilters:
+    - RetryFilter
+    - AggregateInstanceExtraSpecsFilter
+    - AvailabilityZoneFilter
+    - RamFilter
+    - DiskFilter
+    - ComputeFilter
+    - ComputeCapabilitiesFilter
+    - ImagePropertiesFilter
+
+  IronicEnabledDrivers: pxe_ssh
+
+  ControllerExtraConfig:
+    Ironic::neutron::cleaning_network: uuid-here

@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "name": "node0",
+      "driver": "pxe_ssh",
+      "driver_info": {
+        "ssh_virt_type": "virsh",
+        "ssh_address": "192.168.122.1",
+        "ssh_username": "homeski",
+        "ssh_key_contents": ""
+      },
+      "properties": {
+        "cpus": "1",
+        "memory_mb": "1024",
+        "local_gb": "40"
+      },
+      "ports": [
+       { "address": "" }
+      ]
+    }
+  ]
+}

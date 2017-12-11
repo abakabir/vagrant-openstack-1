@@ -1,0 +1,147 @@
+heat_template_version: newton
+
+description: >
+  Stack to test communication between two instances on tenant network.
+  Also to test external network access thru floating IP.
+
+parameters:
+  image_name:
+    type: string
+    label: Server image name
+    description: Name of the image to launch instances with
+
+resources:
+  test_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: test_key
+
+  test_instance_1:
+    type: OS::Nova::Server
+    properties:
+      name: test1
+      flavor: { get_resource: nano_flavor }
+      image: { get_param: image_name }
+      key_name: { get_resource: test_key }
+      networks:
+        - port: { get_resource: test_instance1_port }
+
+  test_instance_2:
+    type: OS::Nova::Server
+    properties:
+      name: test2
+      flavor: { get_resource: micro_flavor }
+      image: { get_param: image_name }
+      key_name: { get_resource: test_key }
+      networks:
+        - port: { get_resource: test_instance2_port }
+
+  nano_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      name: m1.nano
+      disk: 1
+      ram: 512
+      vcpus: 1
+
+  micro_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      name: m1.micro
+      disk: 10
+      ram: 512
+      vcpus: 1
+
+  tenant_network:
+    type: OS::Neutron::Net
+    properties:
+      name: tenant_network_test
+
+  tenant_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: tenant_subnet_test
+      network_id: { get_resource: tenant_network }
+      enable_dhcp: true
+      allocation_pools:
+        - start: 172.16.0.20
+          end: 172.16.0.50
+      gateway_ip: 172.16.0.1
+      cidr: 172.16.0.0/24
+      dns_nameservers:
+        - 8.8.8.8
+
+  public_network:
+    type: OS::Neutron::ProviderNet
+    properties:
+      name: public_network_test
+      network_type: flat
+      physical_network: datacentre
+      router_external: true
+      shared: true
+
+  public_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: public_subnet_test
+      network_id: { get_resource: public_network }
+      enable_dhcp: true
+      allocation_pools:
+        - start: 10.0.0.20
+          end: 10.0.0.50
+      gateway_ip: 10.0.0.1
+      cidr: 10.0.0.0/24
+
+  public_router:
+    type: OS::Neutron::Router
+    properties:
+      name: public
+      external_gateway_info:
+        network: { get_resource: public_network }
+
+  public_router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: public_router }
+      subnet_id: { get_resource: tenant_subnet }
+
+  test_instance1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_resource: public_network }
+      port_id: { get_resource: test_instance1_port }
+
+  test_instance1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: tenant_network }
+      fixed_ips:
+        - subnet_id: { get_resource: tenant_subnet }
+      security_groups:
+        - { get_resource: test_security_group }
+
+  test_instance2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: tenant_network }
+      fixed_ips:
+        - subnet_id: { get_resource: tenant_subnet }
+      security_groups:
+        - { get_resource: test_security_group }
+
+  test_security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: test_security_group
+      rules:
+        - { direction: ingress, ethertype: IPv4, protocol: ICMP }
+        - { direction: ingress, ethertype: IPv4, protocol: TCP, port_range_min: 22, port_range_max: 22 }
+
+outputs:
+  instance1_show:
+    description: test1 UUID
+    value: { get_attr: [test_instance_1, show, id] }
+
+  instance2_show:
+    description: test2 UUID
+    value: { get_attr: [test_instance_2, show, id] }

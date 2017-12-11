@@ -1,0 +1,62 @@
+# Use this environment to pass in certificates for SSL deployments.
+# For these values to take effect, one of the tls-endpoints-*.yaml environments
+# must also be used.
+parameter_defaults:
+  SSLCertificate: |
+    -----BEGIN CERTIFICATE-----
+    MIIEdzCCAl+gAwIBAgICEAMwDQYJKoZIhvcNAQELBQAwZTELMAkGA1UEBhMCVVMx
+    CzAJBgNVBAgMAk5ZMREwDwYDVQQHDAhORVcgWU9SSzEVMBMGA1UECgwMVEhSRUVI
+    VU5EUkVEMQwwCgYDVQQLDANPU1AxETAPBgNVBAMMCDEwLjAuMC45MB4XDTE3MDkx
+    NTIwMTMxNVoXDTI3MDkxMzIwMTMxNVowUjELMAkGA1UEBhMCVVMxCzAJBgNVBAgM
+    Ak5ZMRUwEwYDVQQKDAxUSFJFRUhVTkRSRUQxDDAKBgNVBAsMA09TUDERMA8GA1UE
+    AwwIMTAuMC4wLjkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDYh1DR
+    01svRW29qsrds+x8lYOsbns/oRq5RktPnapTY5Pauhy9qGbMHVCFnN4rpRCDCcT/
+    hm9v9recSww6gWfiH5SeOJ9KhwTcBrcrDzAvx5Jt2tKFgCmhxRvzzGEUMQVfd2pp
+    1BTg7QtMD4ziXZpwlHBpxOnyC5NPnVMftTYG8Rs2SGjgygiHmhiBTLiwbonwfPGm
+    DH4Ogl4fFBHmcqJcdOV4fP4vq5i727Mib9RdtVqtJrz325MnW2iLepi8m67kohVQ
+    aUNwayDW0U2rCT2mzDG+6gBJBY8sG7R8tsj3HtCZBvVLYCvGeVQbjc/ZyRJO49K7
+    wm8hijnSGhrOHS3ZAgMBAAGjRDBCMAkGA1UdEwQCMAAwCwYDVR0PBAQDAgXgMCgG
+    A1UdEQQhMB+HBAoAAAmCCDEwLjAuMC45gg0xOTIuMTY4LjEyMS4xMA0GCSqGSIb3
+    DQEBCwUAA4ICAQBYaC12yWoh/8PizyAotV3zUPMCL5jFPZZRlEM0Ub0i8FoLeVFl
+    w4Ez6je9RoLuMKjJ1sc0gt5R6hoQW3IueESiCuix1Ki3e334L9kJm2Zwd1BvmUlj
+    E9oh2dn+23rY9blRyFu4xQcc04oy/dPU4AMbVRHEpF5iLOfVTPp8zIJJ5qbst20m
+    lkPop3ixUH3tnW5sfb8Ty/9XqrO3JXQgkansUwsS1REKHNqH9nfZX97Gs22aeWA6
+    HemlzWuiqfyP4y7QITdsiTOmSV2A4y8Ao1eKrk7Y6vYdOcSdlIIwcewuoJOR9XWE
+    2q8UKxWuWcOB09J94BoP1CChcvXJ2LuXr7GsdL540zr/ZtEQdt+uhm9e2sAqpLMT
+    h6/5EGeryZClHHoEJrUZCVwx6uQ4mpnx1sAMZ/0zB+CZmYhwxFR4HtcS/HVzURSB
+    fSc+/0e3sTN4CTiMILBgp313HfXokHhhrLtEyq2qeyIy2r4thNdaDOzr0TcXfnRU
+    MvXNQlfv7wETqkltPpdMnLq06Tk2uf99Bo/D9YdKsVi7bkOf4asJDzz0Usb3SDFl
+    dJmnycx06XNX20+YJ+RSuq0PXD3MQuoGhtofhORNrJd2npmqmL5O3gwhwY9fWx91
+    mKTdrRyDkxd43cOeABTVuDJm/29jbYnyJ0taRJeNIjtnWn6j3S4h74Wuzg==
+    -----END CERTIFICATE-----
+  SSLIntermediateCertificate: ''
+  SSLKey: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEA2IdQ0dNbL0VtvarK3bPsfJWDrG57P6EauUZLT52qU2OT2roc
+    vahmzB1QhZzeK6UQgwnE/4Zvb/a3nEsMOoFn4h+UnjifSocE3Aa3Kw8wL8eSbdrS
+    hYApocUb88xhFDEFX3dqadQU4O0LTA+M4l2acJRwacTp8guTT51TH7U2BvEbNkho
+    4MoIh5oYgUy4sG6J8Hzxpgx+DoJeHxQR5nKiXHTleHz+L6uYu9uzIm/UXbVarSa8
+    99uTJ1toi3qYvJuu5KIVUGlDcGsg1tFNqwk9pswxvuoASQWPLBu0fLbI9x7QmQb1
+    S2ArxnlUG43P2ckSTuPSu8JvIYo50hoazh0t2QIDAQABAoIBADr7QSym4iPSSb5s
+    k64ooLafE6sYvUHr5JerakBZtlfYvCHMqJ+RC891/MUooexJnmHTe3IPcLOTBRjx
+    6HbXYTDbYWRoEBwBA3Xb7nEwRfP97Qk3njj3XF/QjXivp5IUeF407Su+taE/cOBb
+    LAlNbhBUnvpwxTlFpe797/KnLfxdmL8lMfmcoa4Ne3YErcZK//7uEbfBBK1BwvpN
+    y01voXLw2jhOmF546eiG7yeJchvKWTqLTikH+mnpXLIXF2nBxyOaZ5rETjR5VmPl
+    A4Te5Ru7x6peZKQ/5tvzg51t+DIyJJG7XzEqvZ2GQYtB1i7JNhnaKyfBkBTT/ezc
+    /jNQTAECgYEA72Qmc+0DyoG/eYEIILSXJYt16bQ3UR6hclVwZIxkx5+M1WVeVjVJ
+    xRRZ62GT6Jo5PcmbRzKPFCIvAO5IApomOrn0w2yzx69H4gHbZqL1bL4qP0ylJ/m3
+    22oIQ9MVrxEOXEbuVPlLCH5EzZ63hj++XBZEv5VLAS1jibzsLI65omECgYEA540Z
+    n53s+IVSMjH/XM1s9KDwiVLno7Kyg1VNGNs+zIhyK5dS9ZJPz2OUfACFSHDDryU3
+    A+e95+fO3qUdzObYGdyHpTevnmOW19ohrUzCvLzL4t7wBd+dY4NKHGLwPEFZQzjN
+    Ebbzts870tATeHTS1HaufYbDuKkB/rY0tm5yLnkCgYEAyMCU2pyFlFpQZyWE2mB3
+    bD3SqSS/SuDEBSyPL1Lo5Nrw8Lesb+EKNyKE8baHogVLQXyDIibNA9ZS0pYAf2Yj
+    7xWopAXRkgB06JwkEKNR61ph9WliCu8IdxEpUy9+PKyx/UJidZIFkV7KdiDGyOdF
+    zNXD22HoX1lf4s8yw38BP6ECgYBwvSWdrsHjWt5jbC5+W9LR5M5YvlHkRSxff5fT
+    I2SXJ1QXX01YHc3YFw8DtSkv1R+h1kfMEfhHwnjZtKEm07qiFNrCmbNbNfgKzr0Y
+    6MfkJzRKGOvaoD68Zf8ehRmc7OBuN2i5WE+fUZU6Fm90dcT1B3f7zDLdZQSApOxT
+    asETWQKBgB4IUAc6osdQ37k0XFpmKcahYiu10bjtPrtdc6RsVUZobHdb2czF6J8l
+    KT/nSTvVtppxIF+Z5TbUn7aZNlipUPCu4EH6C48lhar3Kt8hQxfa4+AQbUPaO9oD
+    vzPb/22g77qqmeHsWn1pxBTO99DNA3Q7y3QB+7Pp4VuC4co0PDsu
+    -----END RSA PRIVATE KEY-----
+resource_registry:
+  OS::TripleO::NodeTLSData: /usr/share/openstack-tripleo-heat-templates/puppet/extraconfig/tls/tls-cert-inject.yaml

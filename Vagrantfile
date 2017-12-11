@@ -131,8 +131,9 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "baremetal",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "veryisolated",
-      auto_config: false
+      libvirt__forward_mode: "route",
+      auto_config: false,
+      ip: "192.168.64.0"
   end
 
   config.vm.define "ctl3" do |n|
@@ -176,8 +177,9 @@ Vagrant.configure("2") do |config|
     n.vm.network "private_network",
       libvirt__network_name: "baremetal",
       libvirt__dhcp_enabled: false,
-      libvirt__forward_mode: "veryisolated",
-      auto_config: false
+      libvirt__forward_mode: "route",
+      auto_config: false,
+      ip: "192.168.64.0"
   end
 
   config.vm.define "cpt1" do |n|
