@@ -23,6 +23,9 @@ output = {
       'ansible_ssh_user': 'heat-admin',
       'ansible_become': 'yes'
     }
+  },
+  '_meta': {
+    {}
   }
 }
 
