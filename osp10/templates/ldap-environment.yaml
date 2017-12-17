@@ -1,0 +1,43 @@
+resource_registry:
+  OS::TripleO::NodeUserData: /home/stack/templates/ldap-userdata.yaml
+  OS::TripleO::Tasks::ControllerPostConfig: /home/stack/templates/ldap-extraconfigpost.yaml
+
+parameter_defaults:
+  ControllerExtraConfig:
+    tripleoldap::ldap:
+      foobar:
+        url: ldap://10.10.182.167:389
+        user: CN=svc-ldap,OU=labUsers,dc=REDHAT,dc=COM
+        password: Redhat01
+        query_scope: sub
+        suffix: DC=REDHAT,DC=COM
+        user_tree_dn: ou=labUsers,dc=REDHAT,dc=COM
+        user_filter: (memberOf=cn=grp-openstack,OU=labUsers,DC=REDHAT,DC=COM)
+        user_objectclass: person
+        user_id_attribute:  sAMAccountName
+        user_name_attribute:  sAMAccountName
+        user_mail_attribute: mail
+        user_enabled_attribute: userAccountControl
+        user_enabled_mask: 2
+        user_enabled_default: 512
+        user_attribute_ignore: password,tenant_id,tenants
+        user_allow_create: False
+        user_allow_update: False
+        user_allow_delete: False
+        use_tls: False
+        tls_cacertfile: /etc/ssl/certs/addc.lab.local.crt
+        chase_referrals: false
+        group_tree_dn: cn=group-cn,ou=groups,dc=REDHAT,dc=COM
+        group_objectclass: posixGroup
+        group_id_attribute: gidNumber
+        group_name_attribute: cn
+        group_member_attribute: uniqueMember
+
+    keystone::using_domain_config: True
+    horizon::keystone_multidomain_support: True
+    horizon::keystone_default_domain: Default
+    nova::keystone::authtoken::auth_version: v3
+    cinder::keystone::authtoken::auth_version: v3
+
+    controller_classes:
+      - tripleoldap

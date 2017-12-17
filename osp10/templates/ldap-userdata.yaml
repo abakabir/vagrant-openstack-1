@@ -1,0 +1,20 @@
+heat_template_version: 2014-10-16
+
+description: >
+  Extra hostname configuration
+
+resources:
+  ldap-userdata:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: {get_resource: tripleoldap-config}
+
+  tripleoldap-config:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      config: {get_file: ldap-first-boot.sh}
+
+outputs:
+  OS::stack_id:
+    value: {get_resource: ldap-userdata}
