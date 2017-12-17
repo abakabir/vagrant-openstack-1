@@ -1,0 +1,25 @@
+- hosts: undercloud
+  user: stack
+  become: yes
+  tasks:
+    - name: Create directory to backup files to
+      file:
+        src: /home/stack/overcloud-database-backups
+        owner: stack
+        group: stack
+        state: directory
+    - name: Add overcloud module to /etc/rsyncd.conf
+      blockinfile:
+        path: /etc/rsyncd.conf
+        block: |
+          [ overcloud ]
+          path             = /home/stack/overcloud-database-backups
+          read only        = false
+          write only       = no
+          list             = yes
+          uid              = stack
+          gid              = stack
+          lock file        = /var/lock/overcloud-backups.lock
+    - name: Enable rsyncd
+      systemd: enabled=yes state=reloaded
+      notify: Restart rsyncd

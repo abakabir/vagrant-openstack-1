@@ -1,0 +1,20 @@
+- hosts: controllers
+  user: heat-admin
+  become: yes
+  tasks:
+    - name: Copy the backup script to /root
+      copy:
+        path: ./backup-mysql.sh
+        dest: /root/backup-mysql.sh
+        owner: root
+        group: root
+        mode: 0755
+    - name: Make sure cron job exists
+      cron:
+        name: "Backup MySQL"
+        minute: *
+        hour:   *
+        day:    *
+        month:  *
+        week:   *
+        job: "/root/backup-mysql.sh"
