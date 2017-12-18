@@ -1,5 +1,5 @@
 resource_registry:
-  OS::TripleO::NodeUserData: /home/stack/osp10/templates/ldap-userdata.yaml
+  OS::TripleO::ControllerExtraConfigPre: /home/stack/osp10/templates/ldap-userdata.yaml
   OS::TripleO::Tasks::ControllerPostConfig: /home/stack/osp10/templates/ldap-extraconfigpost.yaml
 
 parameter_defaults:

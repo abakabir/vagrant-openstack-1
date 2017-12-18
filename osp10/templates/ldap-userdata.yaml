@@ -3,18 +3,53 @@ heat_template_version: 2014-10-16
 description: >
   Extra hostname configuration
 
-resources:
-  ldap-userdata:
-    type: OS::Heat::MultipartMime
-    properties:
-      parts:
-      - config: {get_resource: tripleoldap-config}
+parameters:
+  server:
+    type: string
+  DeployIdentifier:
+    type: string
 
-  tripleoldap-config:
+resources:
+  CustomExtraConfigPre:
     type: OS::Heat::SoftwareConfig
     properties:
-      config: {get_file: ldap-firstboot.sh}
+      group: script
+      config:
+        str_replace:
+          template: |
+            #!/bin/bash -x
+
+            mkdir -p /opt/stack/puppet-modules/tripleoldap/manifests/
+
+            cat <<'EOF' >> /opt/stack/puppet-modules/tripleoldap/manifests/init.pp
+            class tripleoldap ($ldap = undef){
+              if $ldap {
+                create_resources('::keystone::ldap_backend', $ldap)
+              }
+            }
+            EOF
+
+            setsebool -P authlogin_nsswitch_use_ldap=on 2>/dev/null
+
+            echo '-----BEGIN CERTIFICATE-----
+            sadasd
+            -----END CERTIFICATE-----' > /etc/ssl/certs/addc.lab.local.crt
+
+            echo $_SERVER_ > /tmp/foo
+
+          params:
+            _SERVER_: {get_param: server}
+
+  CustomExtraDeploymentPre:
+    type: OS::Heat::SoftwareDeployment
+    properties:
+      server: {get_param: server}
+      config: {get_resource: CustomExtraConfigPre}
+      actions: ['CREATE','UPDATE']
+      input_values:
+        deploy_identifier: {get_param: DeployIdentifier}
 
 outputs:
-  OS::stack_id:
-    value: {get_resource: ldap-userdata}
+  deploy_stdout:
+    description: Deployment reference, used to trigger pre-deploy on changes
+    value: {get_attr: [CustomExtraDeploymentPre, deploy_stdout]}
