@@ -13,7 +13,7 @@ resources:
   tripleoldap-config:
     type: OS::Heat::SoftwareConfig
     properties:
-      config: {get_file: ldap-first-boot.sh}
+      config: {get_file: ldap-firstboot.sh}
 
 outputs:
   OS::stack_id:
