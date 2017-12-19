@@ -21,7 +21,7 @@ resources:
 
             mkdir -p /opt/stack/puppet-modules/tripleoldap/manifests/
 
-            cat <<'EOF' >> /opt/stack/puppet-modules/tripleoldap/manifests/init.pp
+            cat <<'EOF' > /opt/stack/puppet-modules/tripleoldap/manifests/init.pp
             class tripleoldap ($ldap = undef){
               if $ldap {
                 create_resources('::keystone::ldap_backend', $ldap)
