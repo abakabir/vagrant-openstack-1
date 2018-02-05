@@ -1,5 +1,4 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+#!/usr/bin/ruby
 
 Vagrant.configure("2") do |config|
   config.vm.box = "homeski/rhel7.3-osp"
