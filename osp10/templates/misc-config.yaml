@@ -1,0 +1,12 @@
+parameter_defaults:
+
+  ControllerExtraConfig:
+    nova::config::nova_config:
+      DEFAULT/notification_format:
+        value: 'unversioned'
+
+  NovaComputeExtraConfig:
+    nova::config::nova_config:
+      DEFAULT/notification_format:
+        value: 'unversioned'
+    nova::block_device_allocate_retries: 100
