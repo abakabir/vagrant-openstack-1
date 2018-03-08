@@ -1,2 +1,2 @@
 resource_registry:
-  OS::TripleO::NodeExtraConfigPost: /home/stack/osp10/templates/sshd.yaml
+  OS::TripleO::Services::Sshd: /home/stack/osp10/templates/sshd.yaml

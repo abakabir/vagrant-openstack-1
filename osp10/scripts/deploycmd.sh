@@ -8,7 +8,7 @@ time openstack overcloud deploy --templates \
   -e /home/stack/osp10/templates/network-isolation.yaml \
   -e /home/stack/osp10/templates/storage-environment.yaml \
   -e /home/stack/osp10/templates/sshd-environment.yaml \
-  -e /home/stack/osp10/templates/misc-config.yaml
+  -e /home/stack/osp10/templates/misc-config.yaml \
   --ntp-server pool.ntp.org
 
 # -e /home/stack/osp11/templates/environment/enable-tls.yaml \

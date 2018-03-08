@@ -1,4 +1,4 @@
-heat_template_version: newton
+heat_template_version: 2014-10-16
 
 description: >
   Configure sshd_config
