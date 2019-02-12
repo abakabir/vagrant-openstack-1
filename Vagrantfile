@@ -260,6 +260,7 @@ Vagrant.configure("2") do |config|
       auto_config: false,
       ip: "192.168.64.0"
   end
+
   config.vm.define "node1" do |n|
     n.vm.provider provider do |v|
       v.memory = 1024
@@ -274,5 +275,20 @@ Vagrant.configure("2") do |config|
       libvirt__forward_mode: "route",
       auto_config: false,
       ip: "192.168.64.0"
+  end
+
+  config.vm.define "rally" do |n|
+    n.vm.provider provider do |v|
+      v.memory = 1024
+      v.cpus = 1
+      v.cpu_mode = "host-passthrough"
+    end
+
+    n.vm.hostname = "rally.example.com"
+    n.vm.network "private_network",
+      libvirt__network_name: "external",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "nat",
+      ip: "10.0.0.13"
   end
 end

@@ -30,7 +30,7 @@ Virtualized OSP 11 deployment using Vagrant and libvirt.
 4. Internal API
 5. Tenant
 6. External
-7. Baremetal 
+7. Baremetal
 
 1. 192.168.24.0/24
 2. 192.168.34.0/24
@@ -180,9 +180,9 @@ sudo yum install python-tripleoclient -y
 
 # Copy templates to stack's home directory
 mkdir ~/images
-cp -R /vagrant/osp11/ /home/stack/
-cp /home/stack/osp11/undercloud/undercloud.conf /home/stack/
-cp /home/stack/osp11/undercloud/instackenv.json /home/stack/
+cp -R /vagrant/osp10/ /home/stack/
+cp /home/stack/osp10/undercloud/undercloud.conf /home/stack/
+cp /home/stack/osp10/undercloud/instackenv.json /home/stack/
 
 # Install Undercloud
 time openstack undercloud install
@@ -359,7 +359,7 @@ openstack router add subnet baremetal-router baremetal-subnet
 # cleaning_network = <None>
 # systemctl restart openstack-ironic-conductor.service
 source /home/stack/stackrc
-ansible-playbook -i /home/stack/osp11/ansible/hosts.py -e "uuid=$(. /home/stack/overcloudrc; os network show baremetal-network -c id -f value)" /home/stack/osp11/ansible/playbook-ironic-overcloud.yaml  
+ansible-playbook -i /home/stack/osp11/ansible/hosts.py -e "uuid=$(. /home/stack/overcloudrc; os network show baremetal-network -c id -f value)" /home/stack/osp11/ansible/playbook-ironic-overcloud.yaml
 
 
 ## Creating the Baremetal flavor
@@ -465,8 +465,8 @@ openstack aggregate create --property baremetal=false virtual-hosts
 # openstack aggregate add host baremetal-hosts HOSTNAME
 # openstack aggregate add host virtual-hosts HOSTNAME
 openstack aggregate add host baremetal-hosts overcloud-controller-0.localdomain
-openstack aggregate add host virtual-hosts overcloud-compute-0.localdomain 
-openstack aggregate add host virtual-hosts overcloud-compute-1.localdomain 
+openstack aggregate add host virtual-hosts overcloud-compute-0.localdomain
+openstack aggregate add host virtual-hosts overcloud-compute-1.localdomain
 
 
 ```
