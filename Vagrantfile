@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "homeski/rhel7.3-osp"
+  config.vm.box = "vagrant-rhel-7.6"
 
   # https://github.com/vagrant-libvirt/vagrant-libvirt
   provider = "libvirt"
@@ -21,6 +21,46 @@ Vagrant.configure("2") do |config|
   # Don't use default TLD of vagrant.test
   # This seems to cause issues with packets intermittently dropping for some reason?
   config.landrush.tld = 'example.com'
+
+  config.vm.define "kvm" do |n|
+    n.vm.provider provider do |v|
+      v.memory = 4096
+      v.cpus = 4
+      v.cpu_mode = "custom"
+      v.nested = true
+    end
+
+    n.vm.synced_folder ".", "/vagrant", type: 'rsync'
+
+    n.vm.hostname = "kvm.example.com"
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "provisioning",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "veryisolated",
+      auto_config: false
+    n.vm.network "private_network",
+      libvirt__network_name: "dummy",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "veryisolated"
+    n.vm.network "private_network",
+      libvirt__network_name: "dummy",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "veryisolated"
+    n.vm.network "private_network",
+      libvirt__network_name: "dummy",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "veryisolated"
+    n.vm.network "private_network",
+      libvirt__network_name: "dummy",
+      libvirt__dhcp_enabled: false,
+      libvirt__forward_mode: "veryisolated"
+  end
+
 
   config.vm.define "dir" do |n|
     n.vm.provider provider do |v|
